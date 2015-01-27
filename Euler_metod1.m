@@ -1,14 +1,15 @@
 clear all
 
-particle1 = [-1; 50; -1];
-particle2 = [0; 50; -1];
-particle3 = [1; 50; -1];
-particle4 = [-1; 50; 0];
-particle5 = [0; 50; 0];
-particle6 = [1; 50; 0];
-particle7 = [-1; 50; 1];
-particle8 = [0; 50; 1];
-particle9 = [1; 50; 1];
+particle = zeros(3,3,3);
+particle(1,1,:) = [-1; 50; -1];
+particle(1,2,:) = [0; 50; -1];
+particle(1,3,:) = [1; 50; -1];
+particle(2,1,:) = [-1; 50; 0];
+particle(2,2,:) = [0; 50; 0];
+particle(2,3,:) = [1; 50; 0];
+particle(3,1,:) = [-1; 50; 1];
+particle(3,2,:) = [0; 50; 1];
+particle(3,3,:) = [1; 50; 1];
 
 velocity1 = [0;0;0];
 velocity2 = [0;0;0];
@@ -21,9 +22,17 @@ velocity8 = [0;0;0];
 velocity9 = [0;0;0];
 
 velocity = zeros(3,3,3);
-velocity = [velocity1, velocity2, velocity3; velocity4, velocity5, velocity6; velocity7, velocity8, velocity9];
-particle = zeros(3,3,3);
-particle = [particle1, particle2, particle3; particle4, particle5, particle6; particle7, particle8, particle9];
+velocity(1,1,:) = [0;0;0];
+velocity(1,2,:) = [0;0;0];
+velocity(1,3,:) = [0;0;0];
+velocity(2,1,:) = [0;0;0];
+velocity(2,2,:) = [0;0;0];
+velocity(2,3,:) = [0;0;0];
+velocity(3,1,:) = [0;0;0];
+velocity(3,2,:) = [0;0;0];
+velocity(3,3,:) = [0;0;0];
+
+
 bredd = 3;
 hojd = 3;
 
@@ -41,18 +50,21 @@ b = bredd;
 h = 0.1;
 m = 0.01;
 k = 100;
+oa = 1;
 
+    velocity_old = velocity;
+    particle_old = particle;
+    particle_new = zeros(size(particle));
+    velocity_new = zeros(size(particle));
 
-    velocity_gammal = velocity;
-    particle_gammal = particle;
-    particle_ny = zeros(size(particle));
-
-    for j = 1:bredd
-        for i = 1:hojd
-        
+    for j = 2:2
+        for i = 2:2
+                        
             %if i mitten
-            %particle_ny(i,j) = particle(i,j) + h .* velocity(i,j) + (h^2 /m)*( -k *((particle(i-1,j)- particle(i,j)*(abs(abs(particle())
             
+            upp = abs(abs(particle(i-1,j,:)-particle(i,j,:))-oa)/abs(particle(i-1,j,:)-particle(i,j,:))))
+            particle_new(i,j,:) = particle(i,j,:) + h .* velocity_old(i,j,:) +  (h^2 /m).*(-k.*((particle(i-1,j,:)-particle(i,j,:)).*(abs(abs(particle(i-1,j,:)-particle(i,j,:))-oa)/abs(particle(i-1,j,:)-particle(i,j,:)))))
+            %particle_new(i,j,:) = [1;2;3]
         end
     end
 
