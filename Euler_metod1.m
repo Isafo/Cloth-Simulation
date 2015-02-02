@@ -74,11 +74,12 @@ hojd = 3;
 % n = tidsstegs nr 
 % j = block nr
 % b = antal kolumner
-% H = tissteg längd 
+% H = tissteg längd (sekunder)
 % k = fjäderkonstant
-% m = blockets massa 
-% oa = orginal avstånd mellan blocken (fjädrarnas viloläge)
+% m = blockets massa (kg)
+% oa = orginal avstånd mellan blocken (fjädrarnas viloläge) (meter)
 % c = dämpningskonstant
+% slutTid = hur lång tid simmuleringen kör (sekunder)
 
 b = bredd;
 h = 0.1;
@@ -86,29 +87,67 @@ m = 0.01;
 k = 100;
 oa = 1;
 c = 5;
+slutTid = 5;
 
-    velocity_old = velocity;
-    particle_old = particle;
+
+velocity_old = velocity;
+particle_old = particle;
+    
+for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
     velocity_new = zeros(size(particle));
 
-    for j = 5:5 %1:bredd*hojd
-                        
-            %if i mitten
+    for j = 1:bredd*hojd  
             
-            kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
-            kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
-            kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
-            kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
+            % if we are on the top row of the fabric
+            if j <= b
+                kUpp = 0;
+                cUpp = 0;
+            else 
+                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
+                cUpp = velocity_old(:,j-b)-velocity_old(:,j);
+            end    
             
-            cUpp = velocity_old(:,j-b)-velocity_old(:,j);
-            cVanster = velocity_old(:,j-1)-velocity_old(:,j);
-            cHoger = velocity_old(:,j+1)-velocity_old(:,j);
-            cNed = velocity_old(:,j+b)-velocity_old(:,j);
+            % if we are on the far left column of the fabric
+            if mod(j,b) == 1
+                kVanster = 0;
+                cVanster = 0;
+            else
+                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
+                cVanster = velocity_old(:,j-1)-velocity_old(:,j);
+            end
             
-            particle_new(:,j) = particle(:,j)+h.*velocity_old(:,j)+(h^2 /m).*(-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
+            % if we are on the far right column of the fabric    
+            if mod(j,b) == 0
+                kHoger = 0;
+                cHoger = 0;
+            else
+                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
+                cHoger = velocity_old(:,j+1)-velocity_old(:,j);
+            end
+            
+            % if we are on the bottom row of the fabric  
+            if j > b*(hojd-1)
+                kNed = 0;
+                cNed = 0;
+            else
+                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
+                cNed = velocity_old(:,j+b)-velocity_old(:,j);
+            end
+            
+            %calculate the new velosity
+            velocity(:,j) = velocity_old(:,j)+(h/m).*(-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
+            
+            %calculate the new possition 
+            particle_new(:,j) = particle(:,j)+h.*velocity(:,j);
     end
-
+    
+    particle_old = particle;
+    particle = particle_new;
+    
+    velocity_old = velocity;
+    velocity = velocity_new;
+end
 
 
 
