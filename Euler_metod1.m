@@ -1,46 +1,5 @@
 clear all
-
-% particle = zeros(3,3,3);
-% particle(1,1,:) = [-1; 50; -1];
-% particle(1,2,:) = [0; 50; -1];
-% particle(1,3,:) = [1; 50; -1];
-% particle(2,1,:) = [-1; 50; 0];
-% particle(2,2,:) = [0; 50; 0];
-% particle(2,3,:) = [1; 50; 0];
-% particle(3,1,:) = [-1; 50; 1];
-% particle(3,2,:) = [0; 50; 1];
-% particle(3,3,:) = [1; 50; 1];
-% 
-% velocity1 = [0;0;0];
-% velocity2 = [0;0;0];
-% velocity3 = [0;0;0];
-% velocity4 = [0;0;0];
-% velocity5 = [0;0;0];
-% velocity6 = [0;0;0];
-% velocity7 = [0;0;0];
-% velocity8 = [0;0;0];
-% velocity9 = [0;0;0];
-% 
-% velocity = zeros(3,3,3);
-% velocity(1,1,:) = [0;0;0];
-% velocity(1,2,:) = [0;0;0];
-% velocity(1,3,:) = [0;0;0];
-% velocity(2,1,:) = [0;0;0];
-% velocity(2,2,:) = [0;0;0];
-% velocity(2,3,:) = [0;0;0];
-% velocity(3,1,:) = [0;0;0];
-% velocity(3,2,:) = [0;0;0];
-% velocity(3,3,:) = [0;0;0];
-
-% particle1 = [-1 50 -1];
-% particle2 = [0 50 -1];
-% particle3 = [1 50 -1];
-% particle4 = [-1 50 0];
-% particle5 = [0 50 0];
-% particle6 = [1 50 0];
-% particle7 = [-1 50 1];
-% particle8 = [0 50 1];
-% particle9 = [1 50 1];
+close all
 
 particle1 = [-1; 50; -1];
 particle2 = [0; 50; -1];
@@ -50,7 +9,7 @@ particle5 = [0; 50; 0];
 particle6 = [1; 50; 0];
 particle7 = [-1; 50; 1];
 particle8 = [0; 50; 1];
-particle9 = [1.1; 50; 1];
+particle9 = [1; 50; 2];
 
 velocity1 = [0;0;0];
 velocity2 = [0;0;0];
@@ -62,9 +21,7 @@ velocity7 = [0;0;0];
 velocity8 = [0;0;0];
 velocity9 = [0;0;0];
 
-%velocity = zeros(3,3,3);
 velocity = [velocity1, velocity2, velocity3, velocity4, velocity5, velocity6, velocity7, velocity8, velocity9];
-%particle = zeros(3,3,3);
 particle = [particle1, particle2, particle3, particle4, particle5, particle6, particle7, particle8, particle9];
 
 bredd = 3;
@@ -82,22 +39,21 @@ hojd = 3;
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
 b = bredd;
-h = 0.1;
-m = 0.01;
-k = -100;
+h = 0.05;
+m = 1;
+k = -1;
 oa = 1;
-c = 0;
-slutTid = 0.5;
-
+c = 1;
+slutTid = 8;
 
 velocity_old = velocity;
 particle_old = particle;
 
 %draw inisial state
 figure
-x = [particle(1,:)];
-y = [particle(2,:)];
-z = [particle(3,:)];
+x = particle(1,:);
+y = particle(2,:);
+z = particle(3,:);
 color = reshape([1,0,0,
                  0,1,0,
                  0,0,1,
@@ -107,7 +63,11 @@ color = reshape([1,0,0,
                  0,0,0,
                  0.5,0.5,0.5,
                  0,0.5,0.5],9,3);
-scatter3(x,y,z,36,color)
+graf = scatter3(x,y,z,36,color);
+
+graf.XDataSource = 'particle(1,:)';
+graf.YDataSource = 'particle(2,:)';
+graf.ZDataSource = 'particle(3,:)';
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -164,82 +124,15 @@ for tid = 0:h:slutTid
     velocity_old = velocity;
     velocity = velocity_new;
     
-    %uppdat draw funktion
-    x = [particle(1,:)];
-    y = [particle(2,:)];
-    z = [particle(3,:)];
-    %drawnow update 
-   % hold on
-    %scatter3(x,y,z)
-    figure
-    color = reshape([1,0,0,
-                     0,1,0,
-                     0,0,1,
-                     1,1,0,
-                     1,0,1,
-                     0,1,1,
-                     1,1,1
-                     0.5,0.5,0.5,
-                     0,0.5,0.5],9,3);
-    scatter3(x,y,z,36,color)
+  %  if mod(tid,0.1) == 0
+        %uppdat draw funktion
+        figure
+        x = particle(1,:);
+        y = particle(2,:);
+        z= particle(3,:);
+        scatter3(x,y,z,36,color)
+        
+        %refreshdata(graf,'caller') 
+        %drawnow  
+  %  end
 end
-
-
-%%
-clear all
-
-x = linspace(0,10,10000);
-y = sin(x);
-%plot(x,y)
-hold on
-p = plot(0,0,'o','MarkerFaceColor','red');
-hold off
-axis manual
-
-for k = 2:length(x)
-    p.XData = x(k);
-    p.YData = y(k);
-    drawnow update
-end
-
-%%
-clear all
-
-figure
-Z = peaks;
-surf(Z)
-axis tight manual
-ax = gca;
-ax.NextPlot = 'replaceChildren';
-
-
-loops = 40;
-F(loops) = struct('cdata',[],'colormap',[]);
-for j = 1:loops
-    X = sin(j*pi/10)*Z;
-    surf(X,Z)
-    drawnow
-    F(j) = getframe;
-end
-
-%%
-clear all
-
-load seamount
-
-figure
-hs(1) = subplot(2,1,1);
-hs(2) = subplot(2,1,2);
-scatter3(hs(1),x,y,z,'MarkerFaceColor',[0 .75 .75])
-scatter3(hs(2),x,y,z,'*')
-
-figure
-[X,Y,Z] = sphere(16);
-S = repmat([50,25,10],numel(X),1);
-C = repmat([1,2,3],numel(X),1);
-s = S(:);
-c = C(:);
-x = [0.5*X(:)];
-y = [0.5*Y(:)];
-z = [0.5*Z(:)];
-scatter3(x,y,z)
