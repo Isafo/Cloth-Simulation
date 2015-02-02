@@ -27,7 +27,6 @@
 *.out
 *.app
 
-
 #MATLAB
 # Windows default autosave extension
 *.asv
