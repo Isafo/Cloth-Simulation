@@ -124,11 +124,11 @@ for tid = 0:h:slutTid
             
             % if we aren't on the top row or the far left column of the fabric
             if j > b && mod(j,b) ~= 1
-                kUppVanster = ((particle_old(:,j-b-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-b-1)-particle_old(:,j))));
+                kUppVanster = ((particle_old(:,j-b-1)-particle_old(:,j)).*((norm(particle_old(:,j-b-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-b-1)-particle_old(:,j))));
                 cUppVanster = velocity_old(:,j-b-1)-velocity_old(:,j);
-                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
+                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*((norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
                 cUpp = velocity_old(:,j-b)-velocity_old(:,j);
-                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
+                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*((norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
                 cVanster = velocity_old(:,j-1)-velocity_old(:,j);
             else          
                 kUppVanster = 0;
@@ -141,11 +141,11 @@ for tid = 0:h:slutTid
             
             % if we aren't on the top row or the far right column of the fabric
             if j > b && mod(j,b) ~= 0
-                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
+                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*((norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
                 cUpp = velocity_old(:,j-b)-velocity_old(:,j);
-                kUppHoger = ((particle_old(:,j-b+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b+1)-particle_old(:,j))-oa)/norm(particle_old(:,j-b+1)-particle_old(:,j))));
+                kUppHoger = ((particle_old(:,j-b+1)-particle_old(:,j)).*((norm(particle_old(:,j-b+1)-particle_old(:,j))-oa)/norm(particle_old(:,j-b+1)-particle_old(:,j))));
                 cUppHoger = velocity_old(:,j-b+1)-velocity_old(:,j);
-                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
+                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*((norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
                 cHoger = velocity_old(:,j+1)-velocity_old(:,j);
             else
                 kUpp = 0;
@@ -158,11 +158,11 @@ for tid = 0:h:slutTid
             
             % if we aren't on the bottom row or the far right column of the fabric
             if j <= b*(hojd-1) && mod(j,b) ~= 0
-                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
+                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*((norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
                 cHoger = velocity_old(:,j+1)-velocity_old(:,j);
-                kNedHoger = ((particle_old(:,j+b+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+b+1)-particle_old(:,j))));
+                kNedHoger = ((particle_old(:,j+b+1)-particle_old(:,j)).*((norm(particle_old(:,j+b+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+b+1)-particle_old(:,j))));
                 cNedHoger = velocity_old(:,j+b+1)-velocity_old(:,j);
-                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
+                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*((norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
                 cNed = velocity_old(:,j+b)-velocity_old(:,j);
             else
                 kHoger = 0;
@@ -175,11 +175,11 @@ for tid = 0:h:slutTid
             
             % if we aren't on the bottom row or the far left column of the fabric
             if j <= b*(hojd-1) && mod(j,b) ~= 1
-                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
+                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*((norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
                 cNed = velocity_old(:,j+b)-velocity_old(:,j);
-                kNedVanster = ((particle_old(:,j+b-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b-1)-particle_old(:,j))-oa)/norm(particle_old(:,j+b-1)-particle_old(:,j))));
+                kNedVanster = ((particle_old(:,j+b-1)-particle_old(:,j)).*((norm(particle_old(:,j+b-1)-particle_old(:,j))-oa)/norm(particle_old(:,j+b-1)-particle_old(:,j))));
                 cNedVanster = velocity_old(:,j+b-1)-velocity_old(:,j);
-                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
+                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*((norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
                 cVanster = velocity_old(:,j-1)-velocity_old(:,j);
             else
                 kNed = 0;
