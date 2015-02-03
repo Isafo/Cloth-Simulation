@@ -157,7 +157,7 @@ for tid = 0:h:slutTid
             cHoger = velocity_old(:,j+1)-velocity_old(:,j);
         else
             %if we can have a streatch spring to the right
-            if mod(j,m) > 0
+            if mod(j,b) ~= 0
                 kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*((norm(particle_old(:,j+1)-particle_old(:,j))-oaSt)/norm(particle_old(:,j+1)-particle_old(:,j))));
                 cHoger = velocity_old(:,j+1)-velocity_old(:,j);
             else
@@ -199,7 +199,7 @@ for tid = 0:h:slutTid
             cVanster = velocity_old(:,j-1)-velocity_old(:,j);
         else
             %if we can have a streatch spring to the left
-            if mod(j,b) > 1
+            if mod(j,b) ~= 1
                 kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*((norm(particle_old(:,j-1)-particle_old(:,j))-oaSt)/norm(particle_old(:,j-1)-particle_old(:,j))));
                 cVanster = velocity_old(:,j-1)-velocity_old(:,j);
             else
