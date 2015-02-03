@@ -1,31 +1,6 @@
 clear all
 close all
 
-particle1 = [-1; 50; -1];
-particle2 = [0; 50; -1];
-particle3 = [1; 50; -1];
-particle4 = [-1; 50; 0];
-particle5 = [0; 50; 0];
-particle6 = [1; 50; 0];
-particle7 = [-1; 50; 1];
-particle8 = [0; 50; 1];
-particle9 = [1; 50; 2];
-
-velocity1 = [0;0;0];
-velocity2 = [0;0;0];
-velocity3 = [0;0;0];
-velocity4 = [0;0;0];
-velocity5 = [0;0;0];
-velocity6 = [0;0;0];
-velocity7 = [0;0;0];
-velocity8 = [0;0;0];
-velocity9 = [0;0;0];
-
-velocity = [velocity1, velocity2, velocity3, velocity4, velocity5, velocity6, velocity7, velocity8, velocity9];
-particle = [particle1, particle2, particle3, particle4, particle5, particle6, particle7, particle8, particle9];
-
-bredd = 3;
-hojd = 3;
 %norm = sqrt(x^2+y^2+x^2)
 
 % n = tidsstegs nr 
@@ -38,13 +13,23 @@ hojd = 3;
 % c = dämpningskonstant
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
+bredd = 4;
+hojd = 4;
 b = bredd;
-h = 0.002;
+h = 0.02;
 m = 1;
-k = -1;
+k = -2;
 oa = 1;
-c = 1;
-slutTid = 2;
+c = -1;
+slutTid = 10;
+
+particle = placeParticles(bredd,hojd,1)
+velocity = zeros(3,bredd*hojd);
+
+% particle(:,16) = [3;3;1];
+% particle(:,16) = [3;3;1];
+% particle(:,16) = [3;3;1];
+% particle(:,16) = [3;3;1];
 
 velocity_old = velocity;
 particle_old = particle;
@@ -62,7 +47,13 @@ color = reshape([1,0,0,
                  0,0,0,
                  0.5,0.5,0.5,
                  0,0.5,0.5],9,3);
- graf = scatter3(x,y,z,36,color);
+ graf = scatter3(x,y,z,36);
+ 
+xlabel('x') % x-axis label
+ylabel('y') % y-axis label
+zlabel('z') % z-axis label
+
+axis([-1 5 -1 5 -1 1])
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -75,7 +66,7 @@ for tid = 0:h:slutTid
                 kUpp = 0;
                 cUpp = 0;
             else 
-                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*(abs(norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
+                kUpp = ((particle_old(:,j-b)-particle_old(:,j)).*((norm(particle_old(:,j-b)-particle_old(:,j))-oa)/norm(particle_old(:,j-b)-particle_old(:,j))));
                 cUpp = velocity_old(:,j-b)-velocity_old(:,j);
             end    
             
@@ -84,7 +75,7 @@ for tid = 0:h:slutTid
                 kVanster = 0;
                 cVanster = 0;
             else
-                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
+                kVanster = ((particle_old(:,j-1)-particle_old(:,j)).*((norm(particle_old(:,j-1)-particle_old(:,j))-oa)/norm(particle_old(:,j-1)-particle_old(:,j))));
                 cVanster = velocity_old(:,j-1)-velocity_old(:,j);
             end
             
@@ -93,7 +84,7 @@ for tid = 0:h:slutTid
                 kHoger = 0;
                 cHoger = 0;
             else
-                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
+                kHoger = ((particle_old(:,j+1)-particle_old(:,j)).*((norm(particle_old(:,j+1)-particle_old(:,j))-oa)/norm(particle_old(:,j+1)-particle_old(:,j))));
                 cHoger = velocity_old(:,j+1)-velocity_old(:,j);
             end
             
@@ -102,7 +93,7 @@ for tid = 0:h:slutTid
                 kNed = 0;
                 cNed = 0;
             else
-                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
+                kNed = ((particle_old(:,j+b)-particle_old(:,j)).*((norm(particle_old(:,j+b)-particle_old(:,j))-oa)/norm(particle_old(:,j+b)-particle_old(:,j))));
                 cNed = velocity_old(:,j+b)-velocity_old(:,j);
             end
             
@@ -120,11 +111,17 @@ for tid = 0:h:slutTid
     velocity = velocity_new;
     
   
-    %uppdat draw funktion
+    %uppdate draw funktion
     x = particle(1,:);
     y = particle(2,:);
     z= particle(3,:);
-    scatter3(x,y,z,36,color)        
+    scatter3(x,y,z,36) 
+    
+    xlabel('x') % x-axis label
+    ylabel('y') % y-axis label
+    zlabel('z') % z-axis label
+
+    axis([-1 5 -1 5 -1 1])
     drawnow  %makes the scatterplott visible
   
 end
