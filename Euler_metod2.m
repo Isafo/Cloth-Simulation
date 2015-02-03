@@ -4,6 +4,7 @@
 % ----------------------------------------%
 
 clear all
+close all
 
 % particle = zeros(3,3,3);
 % particle(1,1,:) = [-1; 50; -1];
@@ -87,18 +88,33 @@ hojd = 3;
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
 b = bredd;
-h = 0.1;
+h = 0.001;
 m = 0.01;
-kSt = 100;
-kSh = 100;
+kSt = 1;
+kSh = 1;
 oa = 1;
-cSt = 5;
-cSh = 5;
-slutTid = 5;
+cSt = 1;
+cSh = 1;
+slutTid = 1;
 
 
 velocity_old = velocity;
 particle_old = particle;
+
+%draw inisial state
+x = particle(1,:);
+y = particle(2,:);
+z = particle(3,:);
+color = reshape([1,0,0,
+                 0,1,0,
+                 0,0,1,
+                 1,1,0,
+                 1,0,1,
+                 0,1,1,
+                 0,0,0,
+                 0.5,0.5,0.5,
+                 0,0.5,0.5],9,3);
+ graf = scatter3(x,y,z,36,color);
     
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -175,7 +191,7 @@ for tid = 0:h:slutTid
             end
             
             %calculate the new velosity
-            velocity(:,j) = velocity_old(:,j)+(h/m).*(-kSt.*(kUpp+kVanster+kHoger+kNed)-kSh.*(kUppVanster+kUppHoger+kNedVanster+kNedHoger)-cSt.*(cUpp+cVanster+cHoger+cNed)-cSh.*(cUppVanster+cUppHoger+cNedVanster+cNedHoger));
+            velocity(:,j) = velocity_old(:,j)+(h/m).*(kSt.*(kUpp+kVanster+kHoger+kNed)+kSh.*(kUppVanster+kUppHoger+kNedVanster+kNedHoger)+cSt.*(cUpp+cVanster+cHoger+cNed)+cSh.*(cUppVanster+cUppHoger+cNedVanster+cNedHoger));
             
             %calculate the new possition 
             particle_new(:,j) = particle(:,j)+h.*velocity(:,j);
@@ -186,6 +202,14 @@ for tid = 0:h:slutTid
     
     velocity_old = velocity;
     velocity = velocity_new;
+    
+  
+    %uppdat draw funktion
+    x = particle(1,:);
+    y = particle(2,:);
+    z= particle(3,:);
+    scatter3(x,y,z,36,color)        
+    drawnow  %makes the scatterplott visible
 end
 
 
