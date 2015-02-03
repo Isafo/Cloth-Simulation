@@ -116,6 +116,7 @@ for tid = 0:h:slutTid
             
             % if we aren't on the bottom row or the far left column of the fabric
             if j <= b*(hojd-1) && mod(j,b) ~= 1
+
                 kNed = ((particle_old(:,j+b)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b)-particle_old(:,j))-oaSt)/norm(particle_old(:,j+b)-particle_old(:,j))));
                 cNed = velocity_old(:,j+b)-velocity_old(:,j);
                 kNedVanster = ((particle_old(:,j+b-1)-particle_old(:,j)).*(abs(norm(particle_old(:,j+b-1)-particle_old(:,j))-oaSh)/norm(particle_old(:,j+b-1)-particle_old(:,j))));
