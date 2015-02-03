@@ -22,7 +22,7 @@ m = 1;
 k = -150;
 oa = 1;
 c = -10;
-g = 9.82;
+g = [0;0;9.82];
 slutTid = 10;
 
 particle = placeParticles(bredd,hojd,oa)
@@ -109,7 +109,7 @@ for tid = 0:h:slutTid
                 velocity(:,j) = velocity_old(:,j);
             else
                 %calculate the new velosity
-                velocity(:,j) = velocity_old(:,j)+(h/m).*((-g/m)-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
+                velocity(:,j) = velocity_old(:,j)+(h/m).*(-m.*g-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
 
                 %calculate the new possition 
                 particle_new(:,j) = particle(:,j)+h.*velocity(:,j);                       
