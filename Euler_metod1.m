@@ -14,7 +14,7 @@ close all
 % g = gravitation
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
-bredd = 4;
+bredd = 5;
 hojd = 4;
 b = bredd;
 h = 0.02;
@@ -132,7 +132,7 @@ for tid = 0:h:slutTid
     ylabel('y') % y-axis label
     zlabel('z') % z-axis label
 
-    axis([-5 5 -5 5 -10 1])
+    axis([-(bredd+1) (bredd+1) -(hojd+1) (hojd+1) -(hojd+1) (hojd+1)])
     drawnow  %makes the scatterplott visible
   
 end
