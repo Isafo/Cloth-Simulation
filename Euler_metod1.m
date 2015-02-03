@@ -11,6 +11,7 @@ close all
 % m = blockets massa (kg)
 % oa = orginal avstånd mellan blocken (fjädrarnas viloläge) (meter)
 % c = dämpningskonstant
+% g = gravitation
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
 bredd = 4;
@@ -18,12 +19,13 @@ hojd = 4;
 b = bredd;
 h = 0.02;
 m = 1;
-k = -2;
+k = -150;
 oa = 1;
-c = -1;
+c = -10;
+g = 9.82;
 slutTid = 10;
 
-particle = placeParticles(bredd,hojd,1)
+particle = placeParticles(bredd,hojd,oa)
 velocity = zeros(3,bredd*hojd);
 
 %  particle(:,16) = [0;0;1];
@@ -32,8 +34,8 @@ velocity = zeros(3,bredd*hojd);
 staticPoint1 = bredd*hojd;
 staticPoint2 = bredd*(hojd-1)+1;
 
-particle(:,staticPoint1) = [3;3;1];
-particle(:,staticPoint2) = [0;3;1];
+% particle(:,staticPoint1) = [3;3;1];
+% particle(:,staticPoint2) = [0;3;1];
 
 velocity_old = velocity;
 particle_old = particle;
@@ -57,7 +59,7 @@ xlabel('x') % x-axis label
 ylabel('y') % y-axis label
 zlabel('z') % z-axis label
 
-axis([-1 5 -1 5 -1 1])
+axis([-1 5 -1 5 -10 10])
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -103,11 +105,11 @@ for tid = 0:h:slutTid
             
             
             if j == staticPoint1 || j == staticPoint2 
-                particle_new(:,j) = particle(:,j)
-                velocity(:,j) = velocity_old(:,j)
+                particle_new(:,j) = particle(:,j);
+                velocity(:,j) = velocity_old(:,j);
             else
                 %calculate the new velosity
-                velocity(:,j) = velocity_old(:,j)+(h/m).*(-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
+                velocity(:,j) = velocity_old(:,j)+(h/m).*((-g/m)-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
 
                 %calculate the new possition 
                 particle_new(:,j) = particle(:,j)+h.*velocity(:,j);                       
@@ -119,11 +121,7 @@ for tid = 0:h:slutTid
     
     velocity_old = velocity;
     %velocity = velocity_new;
-    
-%     The quick way to get static points:
-%     particle(:,16) = [3;3;1];
-%     particle(:,13) = [0;3;1];
-  
+      
     %uppdate draw funktion
     x = particle(1,:);
     y = particle(2,:);
@@ -134,7 +132,7 @@ for tid = 0:h:slutTid
     ylabel('y') % y-axis label
     zlabel('z') % z-axis label
 
-    axis([-1 5 -1 5 -1 1])
+    axis([-5 5 -5 5 -10 1])
     drawnow  %makes the scatterplott visible
   
 end
