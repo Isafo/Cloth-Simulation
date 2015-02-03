@@ -40,10 +40,10 @@ mark = [0; 0; 0];
 %b = bredd;
 h = 0.1;
 m = 0.5;
-k = -10;
+k = 10;
 oa = 2;
-c = 0;
-slutTid = 0.1;
+c = 5;
+slutTid = 1;
 
 
 velocity_old = velocity;
@@ -53,29 +53,29 @@ particle_old = particle;
 particle_new = particle + h*velocity
     
 velocity_old = velocity;
-particle_old = particle
+particle_old = particle;
 
 %starts at x2
 for tid = h:h:slutTid
     particle_new = zeros(size(particle));
     velocity_new = zeros(size(particle));
 
-    langd = norm(mark-particle_old)  
-    kF = ((mark - particle_old).*(abs(langd-oa)/langd))
-    cF = vmark - velocity_old                    
+    langd = norm(mark-particle_old);  
+    kF = ((mark - particle_old).*(langd-oa/langd));
+    cF = vmark - velocity_old;                    
             
             
             %calculate the new velosity
-            velocity = velocity_old+(h/m).*(-k.*(kF)-c.*(cF))
+            velocity = velocity_old+(h/m).*(k.*(kF)+c.*(cF));
             
             %calculate the new possition 
             particle_new = particle + h.*velocity
     
     
-    particle_old = particle
-    particle = particle_new
+    particle_old = particle;
+    particle = particle_new;
     
-    velocity_old = velocity
+    velocity_old = velocity;
     velocity = velocity_new;
     
     %uppdat draw funktion
