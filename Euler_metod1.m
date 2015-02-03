@@ -39,18 +39,17 @@ hojd = 3;
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
 b = bredd;
-h = 0.05;
+h = 0.002;
 m = 1;
 k = -1;
 oa = 1;
 c = 1;
-slutTid = 8;
+slutTid = 2;
 
 velocity_old = velocity;
 particle_old = particle;
 
 %draw inisial state
-figure
 x = particle(1,:);
 y = particle(2,:);
 z = particle(3,:);
@@ -63,11 +62,7 @@ color = reshape([1,0,0,
                  0,0,0,
                  0.5,0.5,0.5,
                  0,0.5,0.5],9,3);
-graf = scatter3(x,y,z,36,color);
-
-graf.XDataSource = 'particle(1,:)';
-graf.YDataSource = 'particle(2,:)';
-graf.ZDataSource = 'particle(3,:)';
+ graf = scatter3(x,y,z,36,color);
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -124,15 +119,12 @@ for tid = 0:h:slutTid
     velocity_old = velocity;
     velocity = velocity_new;
     
-  %  if mod(tid,0.1) == 0
-        %uppdat draw funktion
-        figure
-        x = particle(1,:);
-        y = particle(2,:);
-        z= particle(3,:);
-        scatter3(x,y,z,36,color)
-        
-        %refreshdata(graf,'caller') 
-        %drawnow  
-  %  end
+  
+    %uppdat draw funktion
+    x = particle(1,:);
+    y = particle(2,:);
+    z= particle(3,:);
+    scatter3(x,y,z,36,color)        
+    drawnow  %makes the scatterplott visible
+  
 end
