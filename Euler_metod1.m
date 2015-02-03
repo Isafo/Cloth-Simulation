@@ -26,10 +26,14 @@ slutTid = 10;
 particle = placeParticles(bredd,hojd,1)
 velocity = zeros(3,bredd*hojd);
 
-% particle(:,16) = [3;3;1];
-% particle(:,16) = [3;3;1];
-% particle(:,16) = [3;3;1];
-% particle(:,16) = [3;3;1];
+%  particle(:,16) = [0;0;1];
+%  particle(:,13) = [3;0;1];
+
+staticPoint1 = bredd*hojd;
+staticPoint2 = bredd*(hojd-1)+1;
+
+particle(:,staticPoint1) = [3;3;1];
+particle(:,staticPoint2) = [0;3;1];
 
 velocity_old = velocity;
 particle_old = particle;
@@ -57,7 +61,7 @@ axis([-1 5 -1 5 -1 1])
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
-    velocity_new = zeros(size(particle));
+    %velocity_new = zeros(size(particle));
 
     for j = 1:bredd*hojd  
             
@@ -97,19 +101,28 @@ for tid = 0:h:slutTid
                 cNed = velocity_old(:,j+b)-velocity_old(:,j);
             end
             
-            %calculate the new velosity
-            velocity(:,j) = velocity_old(:,j)+(h/m).*(-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
             
-            %calculate the new possition 
-            particle_new(:,j) = particle(:,j)+h.*velocity(:,j);
+            if j == staticPoint1 || j == staticPoint2 
+                particle_new(:,j) = particle(:,j)
+                velocity(:,j) = velocity_old(:,j)
+            else
+                %calculate the new velosity
+                velocity(:,j) = velocity_old(:,j)+(h/m).*(-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
+
+                %calculate the new possition 
+                particle_new(:,j) = particle(:,j)+h.*velocity(:,j);                       
+            end
     end
     
     particle_old = particle;
     particle = particle_new;
     
     velocity_old = velocity;
-    velocity = velocity_new;
+    %velocity = velocity_new;
     
+%     The quick way to get static points:
+%     particle(:,16) = [3;3;1];
+%     particle(:,13) = [0;3;1];
   
     %uppdate draw funktion
     x = particle(1,:);
