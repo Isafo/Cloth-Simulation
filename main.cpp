@@ -6,12 +6,19 @@
 
 using namespace glm;
 
+//-----------------------
+// function declarations 
+//-----------------------
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void error_callback(int error, const char* description);
+
 int main(void) {
+
+	glfwSetErrorCallback(error_callback);
+
     // Initialise GLFW
-    if (!glfwInit()) {
-	fprintf( stderr, "Failed to initialize GLFW\n" );
-	return -1;
-    }
+    if (!glfwInit())
+		exit(EXIT_FAILURE);
     
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // window not resizable
     
@@ -19,28 +26,35 @@ int main(void) {
     GLFWwindow* window = glfwCreateWindow(1024, 768, "Cloth simulation", NULL, NULL);
     
     if (!window) {
-	glfwTerminate();
-	exit(EXIT_FAILURE);
+		glfwTerminate();
+		exit(EXIT_FAILURE);
     }
     
-    glfwMakeContextCurrent(window); // Initialize GLEW 
-    glewExperimental=true;
+    glfwMakeContextCurrent(window);
+	glfwSwapInterval(1); // set swapinterval to 1 to avoid screen tearing
+	glewExperimental = GL_TRUE; // Initialize GLEW 
     
-    if (glewInit() != GLEW_OK) {
-	fprintf(stderr, "Failed to initialize GLEW\n");
-	return -1;
-    }
+    if (glewInit() != GLEW_OK)
+		exit(EXIT_FAILURE);
 
     glfwSetKeyCallback(window, key_callback); //set key callback for window
     
+	// run untill Esc is pressed
     while (!glfwWindowShouldClose(window)) {
-	double time = glfwGetTime();
-	//draw here
+		
+		double time = glfwGetTime();
+		int width, height;
+
+		//set up viewport
+		glfwGetFramebufferSize(window, &width, %height);
+		glViewport(0, 0, width, height);
+
+		//draw here
+		
 	
-	
-	// Swap buffers
-	glfwSwapBuffers(window);
-	glfwPollEvents();
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
     }
     
     glfwDestroyWindow(window);
@@ -52,5 +66,9 @@ int main(void) {
 static void key_callback (GLFWwindow* window, int key, int scancode, int action, int mods) {
     
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	glfwSetWindowShouldClose(window, GL_TRUE); 
+		glfwSetWindowShouldClose(window, GL_TRUE); 
+}
+
+static void error_callback(int error, const char* description) {
+	fputs(description, stderr);
 }
