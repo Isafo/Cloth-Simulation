@@ -108,7 +108,7 @@ for tid = 0:h:slutTid
                 particle_new(:,j) = particle(:,j);
                 velocity(:,j) = velocity_old(:,j);
             else
-                %calculate the new velosity
+                %calculate the new velosity (minustecknet vid k och c försvinner då k är neggativ)
                 velocity(:,j) = velocity_old(:,j)+(h/m).*(-m.*g-k.*(kUpp+kVanster+kHoger+kNed)-c.*(cUpp+cVanster+cHoger+cNed));
 
                 %calculate the new possition 

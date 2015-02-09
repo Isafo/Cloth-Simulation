@@ -6,9 +6,6 @@
 clear all
 close all
 
-
-bredd = 3;
-hojd = 3;
 %norm = sqrt(x^2+y^2+x^2)
 
 % n = tidsstegs nr 
@@ -21,22 +18,30 @@ hojd = 3;
 % c = dämpningskonstant (St = stretch Sh = shear)
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
+bredd = 10;
+hojd = 10;
+
 b = bredd;
-h = 0.001;
-m = 0.01;
-kSt = 1;
-kSh = 1;
-kB = 1;
+h = 0.02;
+m = 0.001;
+kSt = 0.7;
+kSh = 0.2;
+kB = 0;
 oaSt = 1;
 oaSh = sqrt(2*oaSt^2);
 oaB = 2*oaSt;
-cSt = 1;
-cSh = 1;
-cB = 1;
-slutTid = 1;
+cSt = 0.011;
+cSh = 0.004;
+cB = 0;
+g = [0;0;9.82];
+slutTid = 10;
+
 
 particle = placeParticles(bredd,hojd,oaSt)
 velocity = zeros(3,bredd*hojd);
+
+staticPoint1 = bredd*hojd;
+staticPoint2 = bredd*(hojd-1)+1;
 
 velocity_old = velocity;
 particle_old = particle;
@@ -45,16 +50,7 @@ particle_old = particle;
 x = particle(1,:);
 y = particle(2,:);
 z = particle(3,:);
-color = reshape([1,0,0,
-                 0,1,0,
-                 0,0,1,
-                 1,1,0,
-                 1,0,1,
-                 0,1,1,
-                 0,0,0,
-                 0.5,0.5,0.5,
-                 0,0.5,0.5],9,3);
- graf = scatter3(x,y,z,36,color);
+graf = scatter3(x,y,z,36);
     
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
@@ -182,12 +178,17 @@ for tid = 0:h:slutTid
             cUppVanster = 0;
         end
         
-            
+        %execute the calculation
+        if j == staticPoint1 || j == staticPoint2 
+            particle_new(:,j) = particle(:,j);
+            velocity(:,j) = velocity_old(:,j);
+        else    
             %calculate the new velosity
-            velocity(:,j) = velocity_old(:,j)+(h/m).*(kSt.*(kUpp+kVanster+kHoger+kNed)+kSh.*(kUppVanster+kUppHoger+kNedVanster+kNedHoger)+kB.*(k2Upp+k2Hoger+k2Ned+k2Vanster)+cSt.*(cUpp+cVanster+cHoger+cNed)+cSh.*(cUppVanster+cUppHoger+cNedVanster+cNedHoger)+cB.*(c2Upp+c2Hoger+c2Ned+c2Vanster));
-            
+            velocity(:,j) = velocity_old(:,j)+(h/m).*(-m.*g + kSt.*(kUpp+kVanster+kHoger+kNed)+kSh.*(kUppVanster+kUppHoger+kNedVanster+kNedHoger)+kB.*(k2Upp+k2Hoger+k2Ned+k2Vanster)+cSt.*(cUpp+cVanster+cHoger+cNed)+cSh.*(cUppVanster+cUppHoger+cNedVanster+cNedHoger)+cB.*(c2Upp+c2Hoger+c2Ned+c2Vanster));
+
             %calculate the new possition 
             particle_new(:,j) = particle(:,j)+h.*velocity(:,j);
+        end
     end
     
     particle_old = particle;
@@ -197,17 +198,18 @@ for tid = 0:h:slutTid
     velocity = velocity_new;
     
   
-    %uppdat draw funktion
-    x = particle(1,:);
-    y = particle(2,:);
-    z= particle(3,:);
-    scatter3(x,y,z,36,color)        
-    drawnow  %makes the scatterplott visible
+    if mod(tid/h,5) == 0
+        %uppdat draw funktion
+        x = particle(1,:);
+        y = particle(2,:);
+        z= particle(3,:);
+        scatter3(x,y,z,36)   
+
+        xlabel('x') % x-axis label
+        ylabel('y') % y-axis label
+        zlabel('z') % z-axis label
+        axis([-(bredd*oaSt+1) (bredd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1)])
+
+        drawnow  %makes the scatterplott visible
+    end
 end
-
-
-
-
-
-
-
