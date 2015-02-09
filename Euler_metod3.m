@@ -18,26 +18,26 @@ close all
 % c = dämpningskonstant (St = stretch Sh = shear)
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
+%for 10x10
 bredd = 10;
 hojd = 10;
-
 b = bredd;
 h = 0.02;
 m = 0.001;
 kSt = 0.7;
 kSh = 0.2;
-kB = 0;
+kB = 0.1;
 oaSt = 1;
 oaSh = sqrt(2*oaSt^2);
 oaB = 2*oaSt;
 cSt = 0.011;
 cSh = 0.004;
-cB = 0;
+cB = 0.002;
 g = [0;0;9.82];
 slutTid = 10;
 
 
-particle = placeParticles(bredd,hojd,oaSt)
+particle = placeParticles(bredd,hojd,oaSt);
 velocity = zeros(3,bredd*hojd);
 
 staticPoint1 = bredd*hojd;
