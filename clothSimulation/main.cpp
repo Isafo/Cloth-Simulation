@@ -50,7 +50,7 @@ int main(void) {
 		glViewport(0, 0, width, height);
 
 		//draw here
-		drawTriangle (-1.f, -1.f, 0.f, -1.f, 1.f, 0.f, 1.f, 1.f, 0.f);
+		drawTriangle (-1.f, -1.f, 0.f, 1.f, 1.f, 0.f, -1.f, 1.f, 0.f);
 
 
 		// Swap buffers
@@ -74,6 +74,9 @@ static void error_callback (int error, const char* description) {
 	fputs(description, stderr);
 }
 
+/*
+** Function for drawing a triangle, input should be particle coordinates for particle 1 , 2 then 3 to make the normal point the correct direction
+*/
 void drawTriangle (float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
 	glBegin(GL_TRIANGLES);
 		glColor3f(1.f, 0.f, 0.f);
