@@ -31,7 +31,7 @@ oaSh = sqrt(2*oaSt^2)
 cSt = 0.011;
 cSh = 0.004;
 g = [0;0;9.82];
-slutTid = 25;
+slutTid = 10;
 
 particle = placeParticles(bredd,hojd,oaSt)
 velocity = zeros(3,bredd*hojd);
@@ -154,7 +154,7 @@ for tid = 0:h:slutTid
     velocity_old = velocity;
     velocity = velocity_new;
     
-    if mod(tid/h,10) == 0
+    if mod(tid/h,5) == 0
         %uppdat draw funktion
         x = particle(1,:);
         y = particle(2,:);
@@ -164,7 +164,7 @@ for tid = 0:h:slutTid
         xlabel('x') % x-axis label
         ylabel('y') % y-axis label
         zlabel('z') % z-axis label
-        axis([-(bredd+1) (bredd+1) -(hojd+1) (hojd+1) -(hojd+1) (hojd+1)])
+        axis([-(bredd*oaSt+1) (bredd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1)])
 
         drawnow  %makes the scatterplott visible
     end

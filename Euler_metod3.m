@@ -6,72 +6,6 @@
 clear all
 close all
 
-% particle = zeros(3,3,3);
-% particle(1,1,:) = [-1; 50; -1];
-% particle(1,2,:) = [0; 50; -1];
-% particle(1,3,:) = [1; 50; -1];
-% particle(2,1,:) = [-1; 50; 0];
-% particle(2,2,:) = [0; 50; 0];
-% particle(2,3,:) = [1; 50; 0];
-% particle(3,1,:) = [-1; 50; 1];
-% particle(3,2,:) = [0; 50; 1];
-% particle(3,3,:) = [1; 50; 1];
-% 
-% velocity1 = [0;0;0];
-% velocity2 = [0;0;0];
-% velocity3 = [0;0;0];
-% velocity4 = [0;0;0];
-% velocity5 = [0;0;0];
-% velocity6 = [0;0;0];
-% velocity7 = [0;0;0];
-% velocity8 = [0;0;0];
-% velocity9 = [0;0;0];
-% 
-% velocity = zeros(3,3,3);
-% velocity(1,1,:) = [0;0;0];
-% velocity(1,2,:) = [0;0;0];
-% velocity(1,3,:) = [0;0;0];
-% velocity(2,1,:) = [0;0;0];
-% velocity(2,2,:) = [0;0;0];
-% velocity(2,3,:) = [0;0;0];
-% velocity(3,1,:) = [0;0;0];
-% velocity(3,2,:) = [0;0;0];
-% velocity(3,3,:) = [0;0;0];
-
-% particle1 = [-1 50 -1];
-% particle2 = [0 50 -1];
-% particle3 = [1 50 -1];
-% particle4 = [-1 50 0];
-% particle5 = [0 50 0];
-% particle6 = [1 50 0];
-% particle7 = [-1 50 1];
-% particle8 = [0 50 1];
-% particle9 = [1 50 1];
-
-particle1 = [-1; 50; -1];
-particle2 = [0; 50; -1];
-particle3 = [1; 50; -1];
-particle4 = [-1; 50; 0];
-particle5 = [0; 50; 0];
-particle6 = [1; 50; 0];
-particle7 = [-1; 50; 1];
-particle8 = [0; 50; 1];
-particle9 = [1; 50; 1];
-
-velocity1 = [0;0;0];
-velocity2 = [0;0;0];
-velocity3 = [0;0;0];
-velocity4 = [0;0;0];
-velocity5 = [0;0;0];
-velocity6 = [0;0;0];
-velocity7 = [0;0;0];
-velocity8 = [0;0;0];
-velocity9 = [0;0;0];
-
-%velocity = zeros(3,3,3);
-velocity = [velocity1, velocity2, velocity3, velocity4, velocity5, velocity6, velocity7, velocity8, velocity9];
-%particle = zeros(3,3,3);
-particle = [particle1, particle2, particle3, particle4, particle5, particle6, particle7, particle8, particle9];
 
 bredd = 3;
 hojd = 3;
@@ -101,6 +35,8 @@ cSh = 1;
 cB = 1;
 slutTid = 1;
 
+particle = placeParticles(bredd,hojd,oaSt)
+velocity = zeros(3,bredd*hojd);
 
 velocity_old = velocity;
 particle_old = particle;
