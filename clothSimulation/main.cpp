@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "Euler.h"
+
 using namespace glm;
 
 //-----------------------
@@ -11,9 +13,18 @@ using namespace glm;
 //-----------------------
 static void key_callback (GLFWwindow* window, int key, int scancode, int action, int mods);
 static void error_callback (int error, const char* description);
-void drawTriangle (float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
+void drawTriangles (vector<glm::vec3> particles);
 
 int main(void) {
+
+	//-----------------------
+	// variable declarations 
+	//-----------------------
+	const int nrOfParticlesHorizontally = 100;
+	const int nrOfParticlesVertically = 100;
+	const float springRestLenght = 0.2f;
+	vector<glm::vec3> particles;
+
 
 	glfwSetErrorCallback(error_callback);
 
@@ -25,6 +36,7 @@ int main(void) {
 
 	// Open a window and create its OpenGL context 
 	GLFWwindow* window = glfwCreateWindow(1024, 768, "Cloth simulation", NULL, NULL);
+
 
 	if (!window) {
 		glfwTerminate();
@@ -40,6 +52,9 @@ int main(void) {
 
 	glfwSetKeyCallback(window, key_callback); //set key callback for window
 
+	
+	placeParticles(nrOfParticlesHorizontally, nrOfParticlesVertically, springRestLenght, particles); // place the cloth in its initial state
+
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
 
@@ -50,8 +65,8 @@ int main(void) {
 		glViewport(0, 0, width, height);
 
 		//draw here
-		drawTriangle (-1.f, -1.f, 0.f, 1.f, 1.f, 0.f, -1.f, 1.f, 0.f);
-
+		drawTriangles (particles);
+		particles = Euler(particles); // calculate the cloths next position
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -75,15 +90,19 @@ static void error_callback (int error, const char* description) {
 }
 
 /*
-** Function for drawing a triangle, input should be particle coordinates for particle 1 , 2 then 3 to make the normal point the correct direction
+** Function for drawing a triangle between the neighbouring particles, input should be ordered so that the normal points in the correct direction
 */
-void drawTriangle (float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
-	glBegin(GL_TRIANGLES);
-		glColor3f(1.f, 0.f, 0.f);
-		glVertex3f(x1, y1, z1);
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(x2, y2, z2);
-		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(x3, y3, z3);
-	glEnd();
+void drawTriangles (vector<glm::vec3> particles) {
+	for (int i = 0; i < particles.size(); i = i+3) {
+
+		glBegin(GL_TRIANGLES);
+			glColor3f(1.f, 0.f, 0.f);
+			glVertex3f(particles[i].x, particles[i].y, particles[i].z);
+			glColor3f(0.f, 1.f, 0.f);
+			glVertex3f(particles[i+1].x, particles[i+1].y, particles[i+1].z);
+			glColor3f(0.f, 0.f, 1.f);
+			glVertex3f(particles[i+2].x, particles[i+2].y, particles[i+2].z);
+		glEnd();
+
+	}
 }
