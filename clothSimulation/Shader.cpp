@@ -32,8 +32,8 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 	// Send the source code in teh shader to GL
-	const GLchar *source = (const GLchar *)vertexSource.c_str();
-	glShaderSource(vertexShader, 1, &source, 0);
+	const GLchar *sourceVertex = (const GLchar *)vertexSource.c_str();
+	glShaderSource(vertexShader, 1, &sourceVertex, 0);
 
 	glCompileShader(vertexShader);
 
@@ -57,8 +57,8 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	// Send the source code in the shader to GL
-	const GLchar *source = (const GLchar *)fragmentSource.c_str();
-	glShaderSource(fragmentShader, 1, &source, 0);
+	const GLchar *sourceFragment = (const GLchar *)fragmentSource.c_str();
+	glShaderSource(fragmentShader, 1, &sourceFragment, 0);
 
 	glCompileShader(fragmentShader);
 
@@ -115,5 +115,23 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 */
 string Shader::readFile(const char *filePath) {
 
+	string sourceCode;
+	string line = "";
+	ifstream fileStream (filePath);
 
+	if (fileStream.is_open()) {
+		
+		while (!fileStream.eof()) {
+
+			std::getline(fileStream, line);
+			sourceCode.append(line + "\n");
+		}
+	}
+
+	else {
+		cerr << "Could not open file: " << filePath << endl;
+		return "";
+	}
+	
+	return sourceCode;
 }
