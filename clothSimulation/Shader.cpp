@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "Shader.h"
 
 
 Shader::Shader () {
@@ -21,6 +21,8 @@ Shader::~Shader () {
 
 void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePath) {
 	
+	char str[4096]; // for wrinting error msg
+	
 	GLint isCompiled = 0;
 	GLint isLinked = 0;
 
@@ -40,15 +42,10 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
 	
 	if (isCompiled == GL_FALSE) {
-		GLint maxLength = 0;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &maxLength);
+		cout << "fails vertex" << endl;
 
-		// maxLenght includes the NULL char
-		vector<GLchar> infoLog(maxLength);
-		glGetShaderInfoLog(vertexShader, GL_INFO_LOG_LENGTH, &maxLength, &infoLog[0]);
-
-		glDeleteShader(vertexShader);
-		fprintf(stderr, "%s: %s\n", "Vertex shader compile error", infoLog);
+		glGetShaderInfoLog(vertexShader, sizeof(str), NULL, str);
+		fprintf(stderr, "%s: %s\n", "Fragment shader compile error", str);
 
 		return;
 	}
@@ -65,15 +62,9 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
 
 	if (isCompiled == GL_FALSE) {
-		GLint maxLength = 0;
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &maxLength);
 
-		// maxLenght includes the NULL char
-		vector<GLchar> infoLog(maxLength);
-		glGetShaderInfoLog(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength, &infoLog[0]);
-
-		glDeleteShader(fragmentShader);
-		fprintf(stderr, "%s: %s\n", "Fragment shader compile error", infoLog);
+		glGetShaderInfoLog(vertexShader, sizeof(str), NULL, str);
+		fprintf(stderr, "%s: %s\n", "Fragment shader compile error", str);
 
 		return;
 	}
@@ -88,18 +79,9 @@ void Shader::createShader(const char *vertexFilePath, const char *fragmentFilePa
 	glGetProgramiv(program, GL_LINK_STATUS, (int *)&isLinked);
 
 	if (isLinked == GL_FALSE) {
-		GLint maxLength = 0;
-		glGetProgramiv(program, GL_COMPILE_STATUS, &maxLength);
 
-		// maxLenght includes the NULL char
-		vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(program, GL_INFO_LOG_LENGTH, &maxLength, &infoLog[0]);
-
-		glDeleteProgram(program);
-		glDeleteShader(fragmentShader);
-		glDeleteShader(vertexShader);
-
-		fprintf(stderr, "%s: %s\n", "Program object linking error", infoLog);
+		glGetProgramInfoLog(program, sizeof(str), NULL, str);
+		fprintf(stderr, "%s: %s\n", "Program object linking error", str);
 
 		return;
 	}

@@ -3,6 +3,8 @@
 
 #include "Euler.h"
 
+#include "shader.h"
+
 using namespace glm;
 
 //-----------------------
@@ -23,6 +25,9 @@ int main(void) {
 	vector<glm::vec3> particle_old;
 	vector<glm::vec3> velocity;
 	vector<glm::vec3> velocity_old;
+
+	Shader phongShader;
+
 
 	glfwSetErrorCallback(error_callback);
 
@@ -55,10 +60,9 @@ int main(void) {
 	particle_old = particles;
 	velocity = placeZeros();
 	velocity_old = velocity;
-	cout << " Size of particle  = " << particles.size() << endl;
-	/*cout << " Size of particle_old  = " << particle_old.size() << endl;
-	cout << " Size of velocity  = " << velocity.size() << endl;
-	cout << " Size of velocity_old  = " << velocity_old.size() << endl;*/
+
+	//create shader
+	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
