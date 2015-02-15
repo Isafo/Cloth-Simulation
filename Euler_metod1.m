@@ -14,16 +14,27 @@ close all
 % g = gravitation
 % slutTid = hur lång tid simmuleringen kör (sekunder)
 
-bredd = 5;
-hojd = 4;
+% bredd = 5;
+% hojd = 4;
+% b = bredd;
+% h = 0.02;
+% m = 1;
+% k = -150;
+% oa = 1;
+% c = -10;
+% g = [0;0;9.82];
+% slutTid = 7;
+
+bredd = 10;
+hojd = 10;
 b = bredd;
 h = 0.02;
-m = 1;
-k = -150;
+m = 0.001;
+k = -0.7;
 oa = 1;
-c = -10;
+c = -0.0134;
 g = [0;0;9.82];
-slutTid = 10;
+slutTid = 11;
 
 particle = placeParticles(bredd,hojd,oa)
 velocity = zeros(3,bredd*hojd);
@@ -121,18 +132,19 @@ for tid = 0:h:slutTid
     
     velocity_old = velocity;
     %velocity = velocity_new;
-      
-    %uppdate draw funktion
-    x = particle(1,:);
-    y = particle(2,:);
-    z= particle(3,:);
-    scatter3(x,y,z,36) 
     
-    xlabel('x') % x-axis label
-    ylabel('y') % y-axis label
-    zlabel('z') % z-axis label
+    if mod(tid/h,5) == 0  
+        %uppdate draw funktion
+        x = particle(1,:);
+        y = particle(2,:);
+        z= particle(3,:);
+        scatter3(x,y,z,36) 
 
-    axis([-(bredd+1) (bredd+1) -(hojd+1) (hojd+1) -(hojd+1) (hojd+1)])
-    drawnow  %makes the scatterplott visible
-  
+        xlabel('x') % x-axis label
+        ylabel('y') % y-axis label
+        zlabel('z') % z-axis label
+
+        axis([-(bredd+1) (bredd+1) -(hojd+1) (hojd+1) -(hojd+1) (hojd+1)])
+        drawnow  %makes the scatterplott visible
+    end
 end
