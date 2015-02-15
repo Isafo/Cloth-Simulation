@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "shader.h"
+
 using namespace glm;
 
 //-----------------------
@@ -14,6 +16,8 @@ static void error_callback (int error, const char* description);
 void drawTriangle (float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
 
 int main(void) {
+
+	Shader phongShader;
 
 	glfwSetErrorCallback(error_callback);
 
@@ -39,6 +43,9 @@ int main(void) {
 		exit(EXIT_FAILURE);
 
 	glfwSetKeyCallback(window, key_callback); //set key callback for window
+
+	//create shader
+	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
