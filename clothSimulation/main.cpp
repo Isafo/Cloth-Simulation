@@ -26,6 +26,11 @@ int main(void) {
 	vector<glm::vec3> velocity;
 	vector<glm::vec3> velocity_old;
 
+	GLfloat P[16] = { 2.42f, 0.0f, 0.0f, 0.0f
+					, 0.0f, 2.42f, 0.0f, 0.0f
+					, 0.0f, 0.0f, -1.0f, -1.0f
+					, 0.0f, 0.0f, -0.2f, 0.0f };
+
 	Shader phongShader;
 
 
@@ -64,6 +69,13 @@ int main(void) {
 	//create shader
 	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 
+	GLint location_Mv = glGetUniformLocation(phongShader.programID, "Mv");
+	GLint location_P = glGetUniformLocation(phongShader.programID, "P");
+	if (location_P != -1) { // If the variable is not found , -1 is returned
+		glUniformMatrix4fv(location_P, 1, GL_FALSE, P); // Copy the value
+	}
+
+
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
 
@@ -75,6 +87,7 @@ int main(void) {
 
 		//set up viewport
 		glfwGetFramebufferSize(window, &width, &height);
+		P[0] = P[5] * height / width;
 		glViewport(0, 0, width, height);
 
 		//draw here
