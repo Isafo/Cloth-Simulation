@@ -1,27 +1,28 @@
-varying vec4 diffuse, ambientGlobal, ambient;
-varying vec3 normal, lightDir, halfVec;
-varying float dist;
+//Pyramiden
+#version 330 core
+uniform mat4 Mv; //Modelview: two transformations
+uniform mat4 P;  //Projection
+uniform mat4 RMV;
+uniform mat4 RMH;
+layout ( location = 0) in vec3 Position ;
+layout ( location = 1) in vec3 Normal ; //Color
+layout ( location = 2) in vec2 Texture ;
+out vec2 interpolatedTexture ;
+out vec3 interpolatedNormal;
 
-void main() {
-
-	vec4 ecPos;
-	vec3 aux;
-
-	normal = normalize(gl_NormalMatrix * gl_Normal);
-
-	ecPos = gl_ModelViewMatrix * gl_Vertex;
-	aux = vec3(gl_LightSource[0].position-ecPos);
-	lightDir = normalize(aux);
-	dist = length(aux);
-
-	halfVec = normalize(gl_LightSource[0].halfVector.xyz);
-
-	// calculate diffuse term
-	diffuse = gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
-
-	// calculate ambient terms
-	ambient = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
-	ambientGlobal = gl_LightModel.ambient * gl_FrontMaterial.ambient;
-
-	gl_Position = ftransform();
+void main (){
+     
+//     vec3 L = normalize(mat3(Mv)*vec3(-1,1,0));
+//     vec3 V = vec3(0,0,1);
+//     vec3 N = normalize(Normal);
+//     float D = 0.5*1*max(0.0,dot(L,N));
+//     vec3 R = normalize(reflect(-L,N)); //2*(dot(L,N)*N)-L;
+//     float Ispec = 0.5*pow(max(0.0,dot(V,R)),20.0);
+     
+     //interpolatedColor = vec3(D + Ispec);
+     interpolatedNormal = Normal;
+     interpolatedTexture = Texture;
+     
+     vec4 sist = RMV*RMH*vec4 ( Position*0.5 , 1.0);
+     gl_Position = sist ;
 }
