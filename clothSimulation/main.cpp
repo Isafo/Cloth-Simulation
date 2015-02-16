@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <iostream>
 
 #include "Euler.h"
 
@@ -15,13 +16,16 @@ static void key_callback (GLFWwindow* window, int key, int scancode, int action,
 static void error_callback (int error, const char* description);
 void drawTriangles (vector<glm::vec3> particles);
 
+
+const int nrOfParticlesHorizontally = 100;
+const int nrOfParticlesVertically = 100;
+
 int main(void) {
 
 	//-----------------------
 	// variable declarations 
 	//-----------------------
-	const int nrOfParticlesHorizontally = 100;
-	const int nrOfParticlesVertically = 100;
+
 	const float springRestLenght = 0.2f;
 	vector<glm::vec3> particles;
 
@@ -93,16 +97,18 @@ static void error_callback (int error, const char* description) {
 ** Function for drawing a triangle between the neighbouring particles, input should be ordered so that the normal points in the correct direction
 */
 void drawTriangles (vector<glm::vec3> particles) {
-	for (int i = 0; i < particles.size(); i = i+3) {
-
+	vector<glm::vec3> drawOrder = MakeTriangles(particles, nrOfParticlesHorizontally, nrOfParticlesVertically);
+	for (int i = 0; i + 2 < drawOrder.size(); i = i + 3) {
+		//cout << i << " av " << drawOrder.size() << "; i + 2 = " << i + 2 << endl;
+		//cout << "x = " << drawOrder[i].x << "; y = " << drawOrder[i].y << "; z = " << drawOrder[i].z << endl << endl;
 		glBegin(GL_TRIANGLES);
 			glColor3f(1.f, 0.f, 0.f);
-			glVertex3f(particles[i].x, particles[i].y, particles[i].z);
+			glVertex3f(drawOrder[i].x, drawOrder[i].y, drawOrder[i].z);
 			glColor3f(0.f, 1.f, 0.f);
-			glVertex3f(particles[i+1].x, particles[i+1].y, particles[i+1].z);
+			glVertex3f(drawOrder[i + 1].x, drawOrder[i + 1].y, drawOrder[i + 1].z);
 			glColor3f(0.f, 0.f, 1.f);
-			glVertex3f(particles[i+2].x, particles[i+2].y, particles[i+2].z);
+			glVertex3f(drawOrder[i + 2].x, drawOrder[i + 2].y, drawOrder[i + 2].z);
 		glEnd();
-
 	}
+	//cout << "de va inte fel på loopen!";
 }
