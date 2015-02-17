@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // incude frustum
 
-#include "Euler.h"
+#include "Particles.h"
 
 #include "shader.h"
 
