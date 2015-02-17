@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <iostream>
 
 #include "Euler.h"
 
@@ -17,18 +13,16 @@ static void error_callback (int error, const char* description);
 void drawTriangles (vector<glm::vec3> particles);
 
 
-const int nrOfParticlesHorizontally = 100;
-const int nrOfParticlesVertically = 100;
-
 int main(void) {
 
 	//-----------------------
 	// variable declarations 
 	//-----------------------
 
-	const float springRestLenght = 0.2f;
 	vector<glm::vec3> particles;
-
+	vector<glm::vec3> particle_old;
+	vector<glm::vec3> velocity;
+	vector<glm::vec3> velocity_old;
 
 	glfwSetErrorCallback(error_callback);
 
@@ -56,13 +50,24 @@ int main(void) {
 
 	glfwSetKeyCallback(window, key_callback); //set key callback for window
 
-	
-	placeParticles(nrOfParticlesHorizontally, nrOfParticlesVertically, springRestLenght, particles); // place the cloth in its initial state
+	// place the cloth in its initial state
+	placeParticles(particles); 
+	particle_old = particles;
+	velocity = placeZeros();
+	velocity_old = velocity;
+	cout << " Size of particle  = " << particles.size() << endl;
+	/*cout << " Size of particle_old  = " << particle_old.size() << endl;
+	cout << " Size of velocity  = " << velocity.size() << endl;
+	cout << " Size of velocity_old  = " << velocity_old.size() << endl;*/
 
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
 
 		int width, height;
+
+		/*cout << " Particle 5 x  = " << particles[5].x << " Particle 6 x  = " << particles[6].x << " Particle 7 x  = " << particles[7].x << endl;
+		cout << " Particle 5 y  = " << particles[5].y << " Particle 6 y  = " << particles[6].y << " Particle 7 y  = " << particles[7].y << endl;
+		cout << " Particle 5 x  = " << particles[5].z << " Particle 6 z  = " << particles[6].z << " Particle 7 z  = " << particles[7].z << endl<<endl;//*/
 
 		//set up viewport
 		glfwGetFramebufferSize(window, &width, &height);
@@ -70,7 +75,7 @@ int main(void) {
 
 		//draw here
 		drawTriangles (particles);
-		particles = Euler(particles); // calculate the cloths next position
+		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -97,7 +102,7 @@ static void error_callback (int error, const char* description) {
 ** Function for drawing a triangle between the neighbouring particles, input should be ordered so that the normal points in the correct direction
 */
 void drawTriangles (vector<glm::vec3> particles) {
-	vector<glm::vec3> drawOrder = MakeTriangles(particles, nrOfParticlesHorizontally, nrOfParticlesVertically);
+	vector<glm::vec3> drawOrder = MakeTriangles(particles);
 	for (int i = 0; i + 2 < drawOrder.size(); i = i + 3) {
 		//cout << i << " av " << drawOrder.size() << "; i + 2 = " << i + 2 << endl;
 		//cout << "x = " << drawOrder[i].x << "; y = " << drawOrder[i].y << "; z = " << drawOrder[i].z << endl << endl;
