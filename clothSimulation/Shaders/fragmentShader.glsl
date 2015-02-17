@@ -3,6 +3,7 @@ in vec2 interpolatedTexture;
 in vec3 interpolatedNormal;
 uniform mat4 Mv; //Modelview: two transformations
 uniform mat4 P; //Projection
+uniform mat4 V; // View matrix
 out vec4 color;
 uniform sampler2D tex; //A uniform variable to identify the texture in
 //vec2 st; //Interpolated texture coords, sent from vertex shader

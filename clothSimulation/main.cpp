@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> // incude frustum
 
 #include "Particles.h"
 
@@ -26,10 +30,14 @@ int main(void) {
 	vector<glm::vec3> velocity;
 	vector<glm::vec3> velocity_old;
 
-	GLfloat P[16] = { 2.42f, 0.0f, 0.0f, 0.0f
-					, 0.0f, 2.42f, 0.0f, 0.0f
-					, 0.0f, 0.0f, -1.0f, -1.0f
-					, 0.0f, 0.0f, -0.2f, 0.0f };
+	glm::mat4 frustum = glm::frustum(10, -10, -10, 4, 0, 10);
+
+	GLfloat P[16] = { frustum[0][0], frustum[0][1], frustum[0][2], frustum[0][3]
+					, frustum[1][0], frustum[1][1], frustum[1][2], frustum[1][3]
+					, frustum[2][0], frustum[2][1], frustum[2][2], frustum[2][3]
+					, frustum[3][0], frustum[3][1], frustum[3][2], frustum[3][3] };
+
+	mat4 V = glm::lookAt(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 1.0f)); // get the view matrix
 
 	Shader phongShader;
 
@@ -72,11 +80,13 @@ int main(void) {
 	//create shader
 	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 
+
 	GLint location_Mv = glGetUniformLocation(phongShader.programID, "Mv");
 	GLint location_P = glGetUniformLocation(phongShader.programID, "P");
 	if (location_P != -1) { // If the variable is not found , -1 is returned
 		glUniformMatrix4fv(location_P, 1, GL_FALSE, P); // Copy the value
 	}
+	GLint location_V = glGetUniformLocation(phongShader.programID, "V");
 
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
