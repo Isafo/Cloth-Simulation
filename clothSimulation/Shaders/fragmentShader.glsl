@@ -1,12 +1,12 @@
 #version 330 core
-in vec2 interpolatedTexture;
+
+in vec2 UV; // the UV coordinates
 in vec3 interpolatedNormal;
 uniform mat4 Mv; //Modelview: two transformations
 uniform mat4 P; //Projection
 uniform mat4 V; // View matrix
 out vec4 color;
 uniform sampler2D tex; //A uniform variable to identify the texture in
-//vec2 st; //Interpolated texture coords, sent from vertex shader
 
 void main (){
 
@@ -26,6 +26,6 @@ void main (){
      
      vec4 light = vec4(phong, 1.0);
 
-     color = texture(tex, interpolatedTexture) * light; //Use the texture to set the surface color
+     color = texture(tex, UV) * light; //Use the texture to set the surface color
 
 }

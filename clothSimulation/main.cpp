@@ -40,6 +40,7 @@ int main(void) {
 	mat4 V = glm::lookAt(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 1.0f)); // get the view matrix
 
 	Shader phongShader;
+	GLuint textureID;
 
 	glfwSetErrorCallback(error_callback);
 
@@ -73,13 +74,11 @@ int main(void) {
 	velocity = placeZeros();
 	velocity_old = velocity;
 	cout << " Size of particle  = " << particles.size() << endl;
-	/*cout << " Size of particle_old  = " << particle_old.size() << endl;
-	cout << " Size of velocity  = " << velocity.size() << endl;
-	cout << " Size of velocity_old  = " << velocity_old.size() << endl;*/
 
 	//create shader
 	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 
+	
 
 	GLint location_Mv = glGetUniformLocation(phongShader.programID, "Mv");
 	GLint location_P = glGetUniformLocation(phongShader.programID, "P");
@@ -88,14 +87,11 @@ int main(void) {
 	}
 	GLint location_V = glGetUniformLocation(phongShader.programID, "V");
 
+
 	// run untill window should close
 	while (!glfwWindowShouldClose(window)) {
 
 		int width, height;
-
-		/*cout << " Particle 5 x  = " << particles[5].x << " Particle 6 x  = " << particles[6].x << " Particle 7 x  = " << particles[7].x << endl;
-		cout << " Particle 5 y  = " << particles[5].y << " Particle 6 y  = " << particles[6].y << " Particle 7 y  = " << particles[7].y << endl;
-		cout << " Particle 5 x  = " << particles[5].z << " Particle 6 z  = " << particles[6].z << " Particle 7 z  = " << particles[7].z << endl<<endl;//*/
 
 		//set up viewport
 		glfwGetFramebufferSize(window, &width, &height);
