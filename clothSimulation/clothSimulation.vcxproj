@@ -89,12 +89,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Euler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Euler.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>

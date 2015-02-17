@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Euler.h"
+#include "Particles.h"
 
 #include "shader.h"
 
