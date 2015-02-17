@@ -239,3 +239,7 @@ FakesAssemblies/
 
 # ignore include folder
 include/
+
+*.sln
+*.vcproj
+*.vcproj.filters
