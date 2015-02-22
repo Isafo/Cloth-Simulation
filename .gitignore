@@ -241,5 +241,5 @@ FakesAssemblies/
 include/
 
 *.sln
-*.vcproj
-*.vcproj.filters
+clothSimulation/clothSimulation.vcxproj
+clothSimulation/clothSimulation.vcxproj.filters
