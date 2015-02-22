@@ -1,10 +1,7 @@
 #include "Particles.h"
 
+// Calculate the cloths position in the next frame using Eulermethod. Input is the cloths position in the current frame
 
-/*
-** Calculate the cloths position in the next frame using Eulermethod. Input is the cloths position in the current frame
-*/
-//vector<glm::vec3> Euler(vector<glm::vec3> particlesCurPos, vector<glm::vec3> particle_old, vector<glm::vec3> velocity, vector<glm::vec3> velocity_old, const int width, const int height, const float springRestLenght, const float h, const float m, const float k, const float c){
 vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_old, vector<glm::vec3> velocity, vector<glm::vec3> velocity_old){
 	
 	vector<glm::vec3> particlesNextPos;
@@ -28,9 +25,7 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j <= nrOfParticlesHorizontally){
 			kUpp = glm::vec3(0.f, 0.f, 0.0f);
 			cUpp = glm::vec3(0.f, 0.f, 0.0f);
-		}
-		// else add force from the spring and damper attatch to the paricle above
-		else{
+		} else{ // else add force from the spring and damper attatch to the paricle above
 			kUpp = (particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - springRestLenght) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]));
 			cUpp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
 		}
@@ -39,8 +34,7 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j % nrOfParticlesHorizontally == 0){
 			kVanster = glm::vec3(0.f, 0.f, 0.0f);
 			cVanster = glm::vec3(0.f, 0.f, 0.0f);
-		}
-		else{
+		} else{
 			kVanster = (particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - springRestLenght) / norm(particle_old[j - 1] - particle_old[j]));
 			cVanster = velocity_old[j - 1] - velocity_old[j];
 		}
@@ -49,8 +43,7 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j % nrOfParticlesHorizontally == nrOfParticlesHorizontally -1){
 			kRigth = glm::vec3(0.f, 0.f, 0.0f);
 			cRigth = glm::vec3(0.f, 0.f, 0.0f);
-		}
-		else{
+		} else{
 			kRigth = (particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - springRestLenght) / norm(particle_old[j + 1] - particle_old[j]));
 			cRigth = velocity_old[j + 1] - velocity_old[j];
 		}
@@ -59,8 +52,7 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j >= nrOfParticlesHorizontally*(nrOfParticlesVertically - 1)){
 			kDown = glm::vec3(0.f, 0.f, 0.0f);
 			cDown = glm::vec3(0.f, 0.f, 0.0f);
-		}
-		else{
+		} else{
 			kDown = (particle_old[j + nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]) - springRestLenght) / norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]));
 			cDown = velocity_old[j + nrOfParticlesHorizontally] - velocity_old[j];
 		}
@@ -68,8 +60,7 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j == staticPoint1 || j == staticPoint2){//! detta borde vara en vecktor så att man kan fylla på med statiska punkter, även ta bort statiska ;)
 			particlesNextPos[j] = particle[j];
 			velocity[j] = velocity_old[j];
-		}
-		else{
+		} else{
 			//calculate the new velosity
 			velocity[j] = velocity_old[j] + (timestep / particleMass)*(-particleMass*g + k*(kUpp + kVanster + kRigth + kDown) + c*(cUpp + cVanster + cRigth + cDown));
 
@@ -91,9 +82,8 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 	return particlesNextPos;
 }
 
-/*
-** Place a vector whith zeros, cloth velosity in its initial state.
-*/
+
+// Place a vector whith zeros, cloth velosity in its initial state.
 vector<glm::vec3> placeZeros(){
 	vector<glm::vec3> zeroVector;
 	for (int i = 0; i < nrOfParticlesVertically*nrOfParticlesHorizontally; i++) {
@@ -102,10 +92,7 @@ vector<glm::vec3> placeZeros(){
 	return zeroVector;
 }
 
-/*
-** Place the particles in a coordinate system, cloth in its initial state, the first particle in origo.
-*/
-//void placeParticles(const int nrOfParticlesHorizontally, const int nrOfParticlesVertically, const float springRestLenght, vector<glm::vec3> &coordinates){
+// Place the particles in a coordinate system, cloth in its initial state, the first particle in origo.
 void placeParticles(vector<glm::vec3> &particles) {
 
 	float row = 0;
@@ -118,24 +105,19 @@ void placeParticles(vector<glm::vec3> &particles) {
 		if (fmod(i, nrOfParticlesHorizontally) == 0) {
 			tempVec.y = row; // Y-coordinate
 			row += springRestLenght;
-		}
-
-		else
+		} else {
 			tempVec.y = row; // Y-coordinate
-
+		}
+			
 		particles.push_back(tempVec);
 	}
 
 }
-
-
-/*
-** MakeTriangles                                  
-** Takes in a vector of Coordinates for each mass 
-** in the cloth and stores them in a new vector   
-** in the order they should be used as triangle   
-** corners when drawing the cloth.                
-*/
+        
+// Takes in a vector of Coordinates for each mass 
+// in the cloth and stores them in a new vector   
+// in the order they should be used as triangle   
+// corners when drawing the cloth.
 vector<glm::vec3> MakeTriangles(vector<glm::vec3> C)
 {
 	vector<glm::vec3> order;
@@ -165,9 +147,8 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> C)
 	return order;
 }
 
-/*
-** norm = sqrt(x^2+y^2+x^2) 
-*/
+
+// norm = sqrt(x^2+y^2+x^2) 
 float norm(glm::vec3 vec){
 	return  sqrt(pow(vec.x, 2.0) + pow(vec.y, 2.0) + pow(vec.x, 2.0));
 }
