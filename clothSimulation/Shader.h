@@ -24,7 +24,6 @@ public:
 
 
 private:
-
 	string readFile(const char *filePath);
 
 };

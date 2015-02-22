@@ -1,17 +1,12 @@
-#version 330 core
-uniform mat4 Mv; //Modelview: two transformations
-uniform mat4 P;  //Projection
-uniform mat4 V; // View matrix
-layout ( location = 0) in vec3 Position ;
-layout ( location = 1) in vec3 Normal ; //Color
-layout ( location = 2) in vec2 TextureUV ;
-out vec2 interpolatedTexture ;
-out vec3 interpolatedNormal;
+# version 450
 
-void main (){
 
-     interpolatedNormal = Normal;
-     UV = TextureUV;
-     
-     gl_Position = P * v * Mv * vec4 ( Position , 1.0);
+attribute vec3 coord3d;
+attribute vec3 v_color;
+varying vec3 f_color; // for sending color from vertexshader to fragmentshader
+uniform mat4 mvp; //  global transformation matrix
+
+void main(void) {
+	gl_Position = mvp * vec4(coord3d, 1.0);
+	f_color = v_color; // send the color to the fragmentshader
 }
