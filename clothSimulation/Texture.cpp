@@ -3,7 +3,7 @@
 GLuint loadBMP(const char * imagePath){
 
 	unsigned char header[54]; // BMB files has a 54-bytes header 
-	unsigned int dataPos, // Position where the actual data begins
+	unsigned int dataPos; // Position where the actual data begins
 	unsigned int width, height, imageSize; // imageSize = width*height*3 , 3 colorchannels
 	unsigned char *data;
 	
