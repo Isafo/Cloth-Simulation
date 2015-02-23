@@ -128,8 +128,15 @@ int main(void) {
 		//draw here
 		drawTriangles(particles, phongShader);
 		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
+<<<<<<< HEAD
 
 
+=======
+		/*cout << " x: " << particles[1].x << " y: " << particles[1].y << " z: " << particles[1].z << endl;
+		cout << " x: " << particles[2].x << " y: " << particles[2].y << " z: " << particles[2].z << endl;
+		cout << " x: " << particles[3].x << " y: " << particles[3].y << " z: " << particles[3].z << endl << endl;// */
+		
+>>>>>>> 05394cb... Merge buggfix
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -199,20 +206,11 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(clothElements), clothElements, GL_STATIC_DRAW);
 
-<<<<<<< HEAD
-	// set cloth colors
-	GLfloat clothColors[] = {
-		0.5, 0.0, 1.0,
-		0.5, 0.0, 1.0,
-		0.0, 0.0, 1.0,
-		0.5, 0.5, 0.5,
-		0.5, 0.5, 0.5,
-		0.5, 0.5, 0.5,
-	};
-
-=======
 	// generate and bind buffer for clothColors
+<<<<<<< HEAD
 >>>>>>> 305f08d... clothColor generated in for loop
+=======
+>>>>>>> 05394cb... Merge buggfix
 	glGenBuffers(1, &vbo_cloth_colors);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(clothColors), clothColors, GL_STATIC_DRAW);
