@@ -165,14 +165,6 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
     GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
 	GLfloat clothColors[1000]; // contains the vertices colors
 
-	/*vector<glm::vec3> drawOrder;
-	drawOrder.push_back(vec3(-1.0f, -1.0f, 0.0f));
-	drawOrder.push_back(vec3(1.0f, -1.0f, 0.0f));
-	drawOrder.push_back(vec3(1.0f, 1.0f, 0.0f));
-	drawOrder.push_back(vec3(1.0f, 1.0f, 0.0f));
-	drawOrder.push_back(vec3(-1.0f, 1.0f, 0.0f));
-	drawOrder.push_back(vec3(-1.0f, -1.0f, 0.0f));*/
-
 	// insert the coordinates in the array and generate the draw order
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
 		clothVertices[j] = (drawOrder[i].x);
@@ -204,53 +196,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothColors[j + 8] = 1.0f;
 	}
 
-	//cout << clothVertices[0] << "  " << clothVertices[1] << "  " << clothVertices[2] << "  " << clothVertices[3] << "  " << clothVertices[4] << endl;
-	//cout << clothVertices[5] << "  " << clothVertices[6] << "  " << clothVertices[7] << "  " << clothVertices[8] << "  " << clothVertices[9] << endl;
-	//cout << clothVertices[10] << "  " << clothVertices[11] << "  " << clothVertices[12] << "  " << clothVertices[13] << "  " << clothVertices[14] << endl;
-/*
-	GLfloat clothVertices[100];
-			// front
-	clothVertices[0] = -1.0f;
-	clothVertices[1] = -1.0f;
-	clothVertices[2] = 0.0f;
 
-	clothVertices[3] = 1.0f;
-	clothVertices[4] = -1.0f;
-	clothVertices[5] = 0.0f;
-
-	clothVertices[6] = 1.0f;
-	clothVertices[7] = 1.0f;
-	clothVertices[8] = 0.0f;
-
-	clothVertices[9] = -1.0f;
-	clothVertices[10] = 1.0f;
-	clothVertices[11] = 0.0f;
-
-	GLfloat clothColors[12];
-
-	clothColors[0] = 0.5;
-	clothColors[1] = 0.0;
-	clothColors[2] = 1.0;
-	clothColors[3] = 0.5;
-	clothColors[4] = 0.0;
-	clothColors[5] = 1.0;
-	clothColors[6] = 0.5;
-	clothColors[7] = 0.0;
-	clothColors[8] = 1.0;
-	clothColors[9] = 0.5;
-	clothColors[10] = 0.0;
-	clothColors[11] = 1.0;
-
-	GLushort clothElements[100];
-
-	clothElements[0] = 0;
-	clothElements[1] = 1;
-	clothElements[2] = 2;
-	clothElements[3] = 3;
-	clothElements[4] = 4;
-	clothElements[5] = 5;
-*/
-	// geerate and bind buffer for clothVertices
+	// generate and bind buffer for clothVertices
 	glGenBuffers(1, &vbo_cloth_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(clothVertices), clothVertices, GL_STATIC_DRAW);
