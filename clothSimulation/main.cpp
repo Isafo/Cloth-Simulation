@@ -163,7 +163,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	
 	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, -1 , 1); // left, right, bottom, top, near, far
 
-	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -3.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 1.0f)); // get the view matrix
+	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -2.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
 
 	double time = glfwGetTime();
 
@@ -174,7 +174,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	GLfloat clothColors[1000]; // contains the vertices colors
 
 	// insert the coordinates in the array and generate the draw order
-	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j + 9) {
+	/*for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j + 9) {
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
@@ -194,7 +194,47 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothColors[i] = 0.5;
 		clothColors[i + 1] = 0.0;
 		clothColors[i + 2] = 1.0;
-	}
+	}*/
+
+	clothVertices[0] = -1;
+	clothVertices[1] = 1;
+	clothVertices[2] = 0;
+
+	clothVertices[3] = -1;
+	clothVertices[4] = -1;
+	clothVertices[5] = 0;
+
+	clothVertices[6] = 1;
+	clothVertices[7] = 1;
+	clothVertices[8] = 0;
+
+	/*clothVertices[9] = 1;
+	clothVertices[10] = 1;
+	clothVertices[11] = 0;*/
+
+	clothVertices[12] = -1;
+	clothVertices[13] = -1;
+	clothVertices[14] = 0;
+
+	clothVertices[15] = 1;
+	clothVertices[16] = -1;
+	clothVertices[17] = 0;
+	
+	clothElements[0] = 0;
+	clothElements[1] = 1;
+	clothElements[2] = 2;
+	clothElements[3] = 2;
+	clothElements[4] = 3;
+
+	clothColors[0] = 0.5;
+	clothColors[1] = 0.0;
+	clothColors[2] = 1.0;
+	clothColors[3] = 0.5;
+	clothColors[4] = 0.0;
+	clothColors[5] = 1.0;
+	clothColors[6] = 0.5;
+	clothColors[7] = 0.0;
+	clothColors[8] = 1.0;
 
 	// geerate and bind buffer for clothVertices
 	glGenBuffers(1, &vbo_cloth_vertices);
