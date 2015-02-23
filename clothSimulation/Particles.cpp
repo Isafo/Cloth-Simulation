@@ -104,10 +104,11 @@ void placeParticles(vector<glm::vec3> &particles) {
 	}
 }
         
-// Takes in a vector of Coordinates for each mass 
+// Takes in a vector of Coordinates for each particle 
 // in the cloth and stores them in a new vector   
 // in the order they should be used as triangle   
-// corners when drawing the cloth.
+// corners when drawing the cloth. To ensure the
+// normal points in the correct direction
 vector<glm::vec3> MakeTriangles(vector<glm::vec3> Coord)
 {
 	vector<glm::vec3> order;
