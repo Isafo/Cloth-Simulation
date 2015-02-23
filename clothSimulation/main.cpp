@@ -126,10 +126,7 @@ int main(void) {
 
 		//draw here
 		drawTriangles(particles, phongShader);
-		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
-		/*cout << " x: " << particles[1].x << " y: " << particles[1].y << " z: " << particles[1].z << endl;
-		cout << " x: " << particles[2].x << " y: " << particles[2].y << " z: " << particles[2].z << endl;
-		cout << " x: " << particles[3].x << " y: " << particles[3].y << " z: " << particles[3].z << endl << endl;// */
+		//particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
 		
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -164,11 +161,19 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
 
 	GLfloat clothVertices[1000]; // contains the cloth vertes coordiates
-	GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
+    GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
 	GLfloat clothColors[1000]; // contains the vertices colors
 
+	/*vector<glm::vec3> drawOrder;
+	drawOrder.push_back(vec3(-1.0f, -1.0f, 0.0f));
+	drawOrder.push_back(vec3(1.0f, -1.0f, 0.0f));
+	drawOrder.push_back(vec3(1.0f, 1.0f, 0.0f));
+	drawOrder.push_back(vec3(1.0f, 1.0f, 0.0f));
+	drawOrder.push_back(vec3(-1.0f, 1.0f, 0.0f));
+	drawOrder.push_back(vec3(-1.0f, -1.0f, 0.0f));*/
+
 	// insert the coordinates in the array and generate the draw order
-	/*for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j + 9) {
+	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
@@ -182,43 +187,45 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothVertices[j + 8] = (drawOrder[i + 2].z);
 
 		clothElements[i] = i;
-		clothElements[i + 1] = i + 1;
-		clothElements[i + 2] = i + 2;
+		clothElements[i + 1] = (i + 1);
+		clothElements[i + 2] = (i + 2);
 
-		clothColors[i] = 0.5;
-		clothColors[i + 1] = 0.0;
-		clothColors[i + 2] = 1.0;
-	}*/
+		clothColors[j] = 0.5f;
+		clothColors[j + 1] = 0.0f;
+		clothColors[j + 2] = 1.0f;
 
-	clothVertices[0] = -1;
-	clothVertices[1] = 1;
-	clothVertices[2] = 0;
+		clothColors[j + 3] = 1.0f;
+		clothColors[j + 4] = 0.0f;
+		clothColors[j + 5] = 0.0f;
 
-	clothVertices[3] = -1;
-	clothVertices[4] = -1;
-	clothVertices[5] = 0;
+		clothColors[j + 6] = 0.5f;
+		clothColors[j + 7] = 1.0f;
+		clothColors[j + 8] = 1.0f;
+	}
 
-	clothVertices[6] = 1;
-	clothVertices[7] = 1;
-	clothVertices[8] = 0;
+	//cout << clothVertices[0] << "  " << clothVertices[1] << "  " << clothVertices[2] << "  " << clothVertices[3] << "  " << clothVertices[4] << endl;
+	//cout << clothVertices[5] << "  " << clothVertices[6] << "  " << clothVertices[7] << "  " << clothVertices[8] << "  " << clothVertices[9] << endl;
+	//cout << clothVertices[10] << "  " << clothVertices[11] << "  " << clothVertices[12] << "  " << clothVertices[13] << "  " << clothVertices[14] << endl;
+/*
+	GLfloat clothVertices[100];
+			// front
+	clothVertices[0] = -1.0f;
+	clothVertices[1] = -1.0f;
+	clothVertices[2] = 0.0f;
 
-	/*clothVertices[9] = 1;
-	clothVertices[10] = 1;
-	clothVertices[11] = 0;*/
+	clothVertices[3] = 1.0f;
+	clothVertices[4] = -1.0f;
+	clothVertices[5] = 0.0f;
 
-	clothVertices[12] = -1;
-	clothVertices[13] = -1;
-	clothVertices[14] = 0;
+	clothVertices[6] = 1.0f;
+	clothVertices[7] = 1.0f;
+	clothVertices[8] = 0.0f;
 
-	clothVertices[15] = 1;
-	clothVertices[16] = -1;
-	clothVertices[17] = 0;
-	
-	clothElements[0] = 0;
-	clothElements[1] = 1;
-	clothElements[2] = 2;
-	clothElements[3] = 2;
-	clothElements[4] = 3;
+	clothVertices[9] = -1.0f;
+	clothVertices[10] = 1.0f;
+	clothVertices[11] = 0.0f;
+
+	GLfloat clothColors[12];
 
 	clothColors[0] = 0.5;
 	clothColors[1] = 0.0;
@@ -229,7 +236,19 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	clothColors[6] = 0.5;
 	clothColors[7] = 0.0;
 	clothColors[8] = 1.0;
+	clothColors[9] = 0.5;
+	clothColors[10] = 0.0;
+	clothColors[11] = 1.0;
 
+	GLushort clothElements[100];
+
+	clothElements[0] = 0;
+	clothElements[1] = 1;
+	clothElements[2] = 2;
+	clothElements[3] = 3;
+	clothElements[4] = 4;
+	clothElements[5] = 5;
+*/
 	// geerate and bind buffer for clothVertices
 	glGenBuffers(1, &vbo_cloth_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_vertices);
@@ -249,7 +268,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glUseProgram(phongShader.programID);
 
 	// calculate the global transform matrix
-	glm::mat4 mvp = frustum * view; // TODO: frustum is messing things up
+	//glm::mat4 mvp = frustum * view;
+	mat4 mvp = mat4(1.0f);
 	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	//bind cloth coordinates
