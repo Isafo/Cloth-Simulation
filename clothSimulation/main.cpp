@@ -25,6 +25,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader);
 GLuint vbo_triangle, vbo_triangle_colors; // Vertex Buffer Objects, for storing vertices directly in the graphics card
 GLint attribute_coord3d, attribute_v_color;
 GLint uniform_mvp;
+GLuint ibo_cloth_elements;
+GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
 struct attributes {
 	GLfloat coord3d[3];
@@ -151,65 +153,83 @@ static void error_callback (int error, const char* description) {
 
 // Function for drawing a triangle between the neighbouring particles
 void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
-/*		
-	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
-	for (int i = 0; i + 2 < drawOrder.size(); i = i + 3) {
-		//cout << i << " av " << drawOrder.size() << "; i + 2 = " << i + 2 << endl;
-		//cout << "x = " << drawOrder[i].x << "; y = " << drawOrder[i].y << "; z = " << drawOrder[i].z << endl << endl;
-		glLoadIdentity();
-		glBegin(GL_TRIANGLES);
-			glColor3f(1.f, 0.f, 0.f);
-			glVertex3f(drawOrder[i].x, drawOrder[i].y, drawOrder[i].z);
-			glColor3f(0.f, 1.f, 0.f);
-			glVertex3f(drawOrder[i + 1].x, drawOrder[i + 1].y, drawOrder[i + 1].z);
-			glColor3f(0.f, 0.f, 1.f);
-			glVertex3f(drawOrder[i + 2].x, drawOrder[i + 2].y, drawOrder[i + 2].z);
-		glEnd();
-	}
-*/
-	glm::mat4 frustum = glm::frustum(1, -1, -1, 1, -5 , 5); // left, right, bottom, top, near, far
+	
+	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, -1 , 1); // left, right, bottom, top, near, far
 
-	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 1.0f)); // get the view matrix
+	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -3.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 1.0f)); // get the view matrix
 
 	double time = glfwGetTime();
 
-	// rotate triangle
-	float move = sinf(time / 1000.0 * (2 * 3.14) / 5); // -1<->+1 every 5 seconds
-	float angle = time / 1000.0 * 45;  // 45° per second
-	glm::vec3 axis_z(0, 0, 1);
-	glm::mat4 m_transform = glm::translate(glm::mat4(1.0f), glm::vec3(move, 0.0, 0.0))
-		* glm::rotate(glm::mat4(1.0f), angle, axis_z);
+	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
 
-	struct attributes triangle_attributes[] = {
-		{ { 0.0, 0.8, 0.0 }, { 1.0, 1.0, 0.0 } },
-		{ { -0.8, -0.8, 0.0 }, { 0.0, 0.0, 1.0 } },
-		{ { 0.8, -0.8, 0.0 }, { 1.0, 0.0, 0.0 } }
+	GLfloat clothVertices[1000]; // contains the cloth vertes coordiates
+	GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
+
+	// create the 
+	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j + 9) {
+		clothVertices[j] = (drawOrder[i].x);
+		clothVertices[j + 1] = (drawOrder[i].y);
+		clothVertices[j + 2] = (drawOrder[i].z);
+
+		clothVertices[j + 3] = (drawOrder[i + 1].x);
+		clothVertices[j + 4] = (drawOrder[i + 1].y);
+		clothVertices[j + 5] = (drawOrder[i + 1].z);
+
+		clothVertices[j + 6] = (drawOrder[i + 2].x);
+		clothVertices[j + 7] = (drawOrder[i + 2].y);
+		clothVertices[j + 8] = (drawOrder[i + 2].z);
+
+		clothElements[i] = i;
+		clothElements[i + 1] = i + 1;
+		clothElements[i + 2] = i + 2;
+	}
+
+	// geerate and bind buffer for clothVertices
+	glGenBuffers(1, &vbo_cloth_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(clothVertices), clothVertices, GL_STATIC_DRAW);
+
+	// generate and bind buffer for clothElements
+	glGenBuffers(1, &ibo_cloth_elements);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(clothElements), clothElements, GL_STATIC_DRAW);
+
+	// set cloth colors
+	GLfloat clothColors[] = {
+		0.5, 0.0, 1.0,
+		0.5, 0.0, 1.0,
+		0.5, 0.0, 1.0,
 	};
-	
-	glGenBuffers(1, &vbo_triangle);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_triangle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_attributes), triangle_attributes, GL_STATIC_DRAW);
 
+	glGenBuffers(1, &vbo_cloth_colors);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(clothColors), clothColors, GL_STATIC_DRAW);
 
 	glUseProgram(phongShader.programID);
 
-	// glm::mat4 mvp = frustum * view * m_transform; // TODO: frustum is messing things up
-	glm::mat4 mvp = view * m_transform;
-
+	// calculate the global transform matrix
+	glm::mat4 mvp = frustum * view; // TODO: frustum is messing things up
 	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
+	//bind cloth coordinates
 	glEnableVertexAttribArray(attribute_coord3d);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_vertices);
+	glVertexAttribPointer(attribute_coord3d, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// bind Colors
 	glEnableVertexAttribArray(attribute_v_color);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_triangle);
-	glVertexAttribPointer(attribute_coord3d, 3, GL_FLOAT, GL_FALSE,  sizeof(struct attributes), 0);								// next coord2d appears every 6 floats: sizeof(struct attributes)
-	glVertexAttribPointer(attribute_v_color, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),  (GLvoid*)(2 * sizeof(GLfloat)));		// next color appears every 5 floats,  offset of first element: (GLvoid*)(2 * sizeof(GLfloat)) 
-	
-	// Push each element in buffer_vertices to the vertex shader
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
+	glVertexAttribPointer(attribute_v_color, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// bind buffer and draw
+	int size;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+	glDrawElements(GL_TRIANGLES, size / sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
 	//clean up
-	glDisableVertexAttribArray(attribute_v_color);
 	glDisableVertexAttribArray(attribute_coord3d);
-	glDeleteBuffers(1, &vbo_triangle);
-	glDeleteBuffers(1, &vbo_triangle_colors);
+	glDisableVertexAttribArray(attribute_v_color);
+	glDeleteBuffers(1, &ibo_cloth_elements);
+
 }
