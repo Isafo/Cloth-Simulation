@@ -215,8 +215,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glUseProgram(phongShader.programID);
 
 	// calculate the global transform matrix
-	//glm::mat4 mvp = frustum * view;
-	mat4 mvp = mat4(1.0f);
+	glm::mat4 mvp = frustum * view;
 	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	//bind cloth coordinates
