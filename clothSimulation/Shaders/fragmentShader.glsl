@@ -1,4 +1,4 @@
-# version 450
+# version 330
 
 varying vec3 f_color;
 
