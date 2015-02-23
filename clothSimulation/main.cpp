@@ -128,7 +128,10 @@ int main(void) {
 		//draw here
 		drawTriangles(particles, phongShader);
 		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
-
+		/*cout << " x: " << particles[1].x << " y: " << particles[1].y << " z: " << particles[1].z << endl;
+		cout << " x: " << particles[2].x << " y: " << particles[2].y << " z: " << particles[2].z << endl;
+		cout << " x: " << particles[3].x << " y: " << particles[3].y << " z: " << particles[3].z << endl << endl;// */
+		
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -198,7 +201,10 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	GLfloat clothColors[] = {
 		0.5, 0.0, 1.0,
 		0.5, 0.0, 1.0,
-		0.5, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+		0.5, 0.5, 0.5,
+		0.5, 0.5, 0.5,
+		0.5, 0.5, 0.5,
 	};
 
 	glGenBuffers(1, &vbo_cloth_colors);
