@@ -127,7 +127,7 @@ int main(void) {
 
 		//draw here
 		drawTriangles(particles, phongShader);
-		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
+		//particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -150,7 +150,6 @@ static void error_callback (int error, const char* description) {
 	fputs(description, stderr);
 }
 
-
 // Function for drawing a triangle between the neighbouring particles
 void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	
@@ -164,8 +163,9 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 
 	GLfloat clothVertices[1000]; // contains the cloth vertes coordiates
 	GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
+	GLfloat clothColors[1000]; // contains the vertices colors
 
-	// create the 
+	// insert the coordinates in the array and generate the draw order
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j + 9) {
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
@@ -182,6 +182,10 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothElements[i] = i;
 		clothElements[i + 1] = i + 1;
 		clothElements[i + 2] = i + 2;
+
+		clothColors[i] = 0.5;
+		clothColors[i + 1] = 0.0;
+		clothColors[i + 2] = 1.0;
 	}
 
 	// geerate and bind buffer for clothVertices
@@ -194,16 +198,11 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(clothElements), clothElements, GL_STATIC_DRAW);
 
-	// set cloth colors
-	GLfloat clothColors[] = {
-		0.5, 0.0, 1.0,
-		0.5, 0.0, 1.0,
-		0.5, 0.0, 1.0,
-	};
-
+	// generate and bind buffer for clothColors
 	glGenBuffers(1, &vbo_cloth_colors);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(clothColors), clothColors, GL_STATIC_DRAW);
+
 
 	glUseProgram(phongShader.programID);
 
@@ -222,9 +221,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glVertexAttribPointer(attribute_v_color, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// bind buffer and draw
-	int size;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+	int size;  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size); // use glGetBufferParameteriv to get the buffer size
 	glDrawElements(GL_TRIANGLES, size / sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
 	//clean up
