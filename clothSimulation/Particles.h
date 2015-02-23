@@ -11,8 +11,8 @@ using namespace std;
 // global constants 
 //-----------------------
 
-const int nrOfParticlesHorizontally = 10;
-const int nrOfParticlesVertically = 10;
+const int nrOfParticlesHorizontally = 6;
+const int nrOfParticlesVertically = 6;
 const float springRestLenght = 0.2f;
 const float timestep = 0.001f;
 const float particleMass = 0.0004f;

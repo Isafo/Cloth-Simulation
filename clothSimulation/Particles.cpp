@@ -61,7 +61,6 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		if (j == staticPoint1 || j == staticPoint2){//! detta borde vara en vecktor så att man kan fylla på med statiska punkter, även ta bort statiska ;)
 			particlesNextPos[j] = particle[j];
 			velocity[j] = velocity_old[j];
-			//cout << "statisk fungerar ";
 		} else{
 			//calculate the new velosity
 			velocity[j] = velocity_old[j] + (timestep / particleMass)*(-particleMass*g + k*(kUpp + kVanster + kRigth + kDown) + c*(cUpp + cVanster + cRigth + cDown));
@@ -71,16 +70,6 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 
 		}
 	}
-			/*cout << "kUpp.x   = " << kUpp.x << " kUpp.y = " << kUpp.x << " kUpp.z = " << kUpp.z << endl;
-			cout << "cUpp.x   = " << cUpp.x << " cUpp.y = " << cUpp.x << " cUpp.z = " << cUpp.z << endl;
-			cout << "kVanster.x   = " << kVanster.x << " kVanster.y = " << kVanster.x << " kVanster.z = " << kVanster.z << endl;
-			cout << "cVanster.x   = " << cVanster.x << " cVanster.y = " << cVanster.x << " cVanster.z = " << cVanster.z << endl;
-			cout << "kRigth.x   = " << kRigth.x << " kRigth.y = " << kRigth.x << " kRigth.z = " << kRigth.z << endl;
-			cout << "cRigth.x   = " << cRigth.x << " cRigth.y = " << cRigth.x << " cRigth.z = " << cRigth.z << endl;
-			cout << "kDown.x   = " << kDown.x << " kDown.y = " << kDown.x << " kDown.z = " << kDown.z << endl;
-			cout << "cDown.x   = " << cDown.x << " cDown.y = " << cDown.x << " cDown.z = " << cDown.z << endl;
-			cout << "normalize  = " << norm(particle_old[1 + nrOfParticlesHorizontally] - particle_old[1]) << endl << endl;*/
-	//}
 	return particlesNextPos;
 }
 
@@ -112,12 +101,7 @@ void placeParticles(vector<glm::vec3> &particles) {
 		tempVec.z = 0; // z-coordinate
 
 		particles.push_back(tempVec);
-		cout << " x: " << particles[i].x << " y: " << particles[i].y << " z: " << particles[i].z << endl;
 	}
-	/*cout << " x: " << particles[1].x << " y: " << particles[1].y << " z: " << particles[1].z << endl;
-	cout << " x: " << particles[2].x << " y: " << particles[2].y << " z: " << particles[2].z << endl;
-	cout << " x: " << particles[3].x << " y: " << particles[3].y << " z: " << particles[3].z << endl << endl;
-	*/
 }
         
 // Takes in a vector of Coordinates for each mass 
@@ -135,7 +119,7 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> Coord)
 	{
 		//if we have reached the rigth side of the cloth 
 		//we skip to the next mass
-		if (j%nrOfParticlesHorizontally != 0)
+		if ((j+1)%nrOfParticlesHorizontally != 0)
 		{
 			order.push_back(Coord[j]);
 			order.push_back(Coord[j + 1]);
@@ -145,11 +129,6 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> Coord)
 			order.push_back(Coord[nrOfParticlesHorizontally + j]);
 		}
 	}
-	
-	cout << " order 0 x: " << order[0].x << " order 0 y: " << order[0].y << " order 0 z: " << order[0].z << endl;
-	cout << " order 1 x: " << order[1].x << " order 1 y: " << order[1].y << " order 1 z: " << order[1].z << endl;
-	cout << " order 2 x: " << order[2].x << " order 2 y: " << order[2].y << " order 2 z: " << order[2].z << endl << endl;// */
-
 	return order;
 }
 
