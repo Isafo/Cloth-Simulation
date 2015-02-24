@@ -169,12 +169,10 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	// while j is used to save the 3 particles x, y and z coordinates and color in the arrays, 9 coordinates -> j = j + 9
 	// loop continues untill there is less than 3 particles left in drawOrder
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
-<<<<<<< HEAD
+
 		//assert(clothVertices[j + 5] != '-1.#IND');
-		
-=======
+
 		// insert the first particles coordinates
->>>>>>> 4a058dda617981b1798e0aec899403a2af038b0f
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
@@ -183,12 +181,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothVertices[j + 3] = (drawOrder[i + 1].x);
 		clothVertices[j + 4] = (drawOrder[i + 1].y);
 		clothVertices[j + 5] = (drawOrder[i + 1].z);
-<<<<<<< HEAD
-		
-=======
 
 		// insert the third particles coordinates
->>>>>>> 4a058dda617981b1798e0aec899403a2af038b0f
 		clothVertices[j + 6] = (drawOrder[i + 2].x);
 		clothVertices[j + 7] = (drawOrder[i + 2].y);
 		clothVertices[j + 8] = (drawOrder[i + 2].z);
