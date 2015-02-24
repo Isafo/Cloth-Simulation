@@ -25,8 +25,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader);
 GLuint vbo_triangle, vbo_triangle_colors; // Vertex Buffer Objects, for storing vertices directly in the graphics card
 GLint attribute_coord3d, attribute_v_color;
 GLint uniform_mvp;
-GLuint ibo_cloth_elements;
-GLuint vbo_cloth_vertices, vbo_cloth_colors;
+
 
 struct attributes {
 	GLfloat coord3d[3];
@@ -73,13 +72,14 @@ int main(void) {
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);		// set swapinterval to 1 to avoid screen tearing
-	glewExperimental = GL_TRUE; // Initialize GLEW 
+	
+	// Initialize GLEW 
+	glewExperimental = GL_TRUE; 
 
 	if (glewInit() != GLEW_OK)
 		exit(EXIT_FAILURE);
 
 	glfwSetKeyCallback(window, key_callback); //set key callback for window
-
 
 	// place the cloth in its initial state
 	placeParticles(particles); 
@@ -119,7 +119,6 @@ int main(void) {
 
 		//set up viewport
 		glfwGetFramebufferSize(window, &width, &height);
-		//P[0] = P[5] * height / width;
 		float ratio = width / (float)height;
 		glViewport(0, 0, width, height);
 
@@ -154,46 +153,62 @@ static void error_callback (int error, const char* description) {
 // Function for drawing a triangle between the neighbouring particles
 void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	
-	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, -1 , 1); // left, right, bottom, top, near, far
+	GLuint ibo_cloth_elements;
+	GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
+	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, -1 , 1); // left, right, bottom, top, near, far
 	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -2.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
 
-	double time = glfwGetTime();
-
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
-
-	GLfloat clothVertices[1000]; // contains the cloth vertes coordiates
-    GLushort clothElements[1000]; // contains the order the cloth elements should be drawn in
+	GLfloat clothVertices[1000]; // contains the cloth vertices coordiates
+    GLushort clothElements[1000]; // contains the order the particles should be drawn in
 	GLfloat clothColors[1000]; // contains the vertices colors
 
-	// insert the coordinates in the array and generate the draw order
+	// insert the coordinates, elements and colors in arrays.
+	// i is used for taking 3 particles each loop, 3 particles -> i = i + 3
+	// while j is used to save the 3 particles x, y and z coordinates and color in the arrays, 9 coordinates -> j = j + 9
+	// loop continues untill there is less than 3 particles left in drawOrder
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
+<<<<<<< HEAD
 		//assert(clothVertices[j + 5] != '-1.#IND');
 		
+=======
+		// insert the first particles coordinates
+>>>>>>> 4a058dda617981b1798e0aec899403a2af038b0f
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
-
+		
+		// insert the second particles coordinates
 		clothVertices[j + 3] = (drawOrder[i + 1].x);
 		clothVertices[j + 4] = (drawOrder[i + 1].y);
 		clothVertices[j + 5] = (drawOrder[i + 1].z);
+<<<<<<< HEAD
 		
+=======
+
+		// insert the third particles coordinates
+>>>>>>> 4a058dda617981b1798e0aec899403a2af038b0f
 		clothVertices[j + 6] = (drawOrder[i + 2].x);
 		clothVertices[j + 7] = (drawOrder[i + 2].y);
 		clothVertices[j + 8] = (drawOrder[i + 2].z);
 
+		// set draw order, the input is orderd
 		clothElements[i] = i;
 		clothElements[i + 1] = (i + 1);
 		clothElements[i + 2] = (i + 2);
 
+		// the first triangles colors
 		clothColors[j] = 0.5f;
 		clothColors[j + 1] = 0.0f;
 		clothColors[j + 2] = 1.0f;
-
+		
+		// the second triangles colors
 		clothColors[j + 3] = 1.0f;
 		clothColors[j + 4] = 0.0f;
 		clothColors[j + 5] = 0.0f;
 
+		// the third triangles colors
 		clothColors[j + 6] = 0.5f;
 		clothColors[j + 7] = 1.0f;
 		clothColors[j + 8] = 1.0f;
@@ -218,8 +233,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glUseProgram(phongShader.programID);
 
 	// calculate the global transform matrix
-	//glm::mat4 mvp = frustum * view;
-	mat4 mvp = mat4(1.0f);
+	glm::mat4 mvp = frustum * view;
 	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	//bind cloth coordinates
@@ -234,7 +248,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 
 	// bind buffer and draw
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cloth_elements);
-	int size;  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size); // use glGetBufferParameteriv to get the buffer size
+	int size; 
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size); // use glGetBufferParameteriv to get the buffer size
 	glDrawElements(GL_TRIANGLES, size / sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
 	//clean up
