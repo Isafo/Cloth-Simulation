@@ -160,8 +160,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	GLuint ibo_cloth_elements;
 	GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
-	glm::mat4 frustum = glm::frustum(0, 1, -1, 0, -1 , 1); // left, right, bottom, top, near, far
-	mat4 view = glm::lookAt(vec3(1.0f, 0.0f, -1.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
+	glm::mat4 frustum = glm::frustum(0, 2, -2, 0, -2 , 1); // left, right, bottom, top, near, far
+	mat4 view = glm::lookAt(vec3(0.3f, 0.0f, -2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
 
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
 	//const int vectorSize = drawOrder.size() * 3;
