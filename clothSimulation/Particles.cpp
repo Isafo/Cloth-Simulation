@@ -107,8 +107,6 @@ void placeParticles(vector<glm::vec3> &particles) {
 		tempVec.y= 0; // y-coordinate
 		tempVec.z =  springRestLenght * row; // z-coordinate
 
-		cout << "particel " << ".x = " << tempVec.x << " .y = " << tempVec.y << " .z = " << tempVec.z << endl;
-
 		particles.push_back(tempVec);
 	}
 }
