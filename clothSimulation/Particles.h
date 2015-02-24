@@ -12,13 +12,13 @@ using namespace std;
 //-----------------------
 
 const int nrOfParticlesHorizontally = 8;
-const int nrOfParticlesVertically = 6;
+const int nrOfParticlesVertically = 7;
 const float springRestLenght = 0.1f;
 const float timestep = 0.001f;
 const float particleMass = 0.1f;
 const float k = 600.0f;							// spring konstant
 const float c =2.0f;							// damper constant
-const glm::vec3 g = glm::vec3(0.f, 9.82f, 0.f); // gravity
+const glm::vec3 g = glm::vec3(0.f, -9.82f, 0.f); // gravity
 
 
 //-----------------------
