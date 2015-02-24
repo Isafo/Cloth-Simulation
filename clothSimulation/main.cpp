@@ -86,6 +86,8 @@ int main(void) {
 	particle_old = particles;
 	velocity = placeZeros();
 	velocity_old = velocity;
+	cout << particles[1].x;
+
 
 	//create shader
 	phongShader.createShader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
@@ -126,7 +128,7 @@ int main(void) {
 
 		//draw here
 		drawTriangles(particles, phongShader);
-		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
+		Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
 		
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -166,6 +168,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 
 	// insert the coordinates in the array and generate the draw order
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
+		//assert(clothVertices[j + 5] != '-1.#IND');
+		
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
@@ -173,7 +177,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothVertices[j + 3] = (drawOrder[i + 1].x);
 		clothVertices[j + 4] = (drawOrder[i + 1].y);
 		clothVertices[j + 5] = (drawOrder[i + 1].z);
-
+		
 		clothVertices[j + 6] = (drawOrder[i + 2].x);
 		clothVertices[j + 7] = (drawOrder[i + 2].y);
 		clothVertices[j + 8] = (drawOrder[i + 2].z);
@@ -210,7 +214,6 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glGenBuffers(1, &vbo_cloth_colors);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(clothColors), clothColors, GL_STATIC_DRAW);
-
 
 	glUseProgram(phongShader.programID);
 

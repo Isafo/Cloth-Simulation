@@ -2,10 +2,11 @@
 
 // Calculate the cloths position in the next frame using Eulermethod. Input is the cloths position in the current frame
 
-vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_old, vector<glm::vec3> velocity, vector<glm::vec3> velocity_old){
+void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<glm::vec3> &velocity, vector<glm::vec3> &velocity_old){
 	
 	vector<glm::vec3> particlesNextPos;
 	particlesNextPos = placeZeros();
+
 	glm::vec3 kUpp;
 	glm::vec3 cUpp;
 	glm::vec3 kVanster;
@@ -14,18 +15,18 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 	glm::vec3 cRigth;
 	glm::vec3 kDown;
 	glm::vec3 cDown;
+	
 
-	//int staticPoint1 = nrOfParticlesHorizontally*nrOfParticlesVertically - 1;
-	//int staticPoint2 = nrOfParticlesHorizontally*(nrOfParticlesVertically - 1);
-	int staticPoint1 = 0;
-	int staticPoint2 = nrOfParticlesHorizontally - 1;
-	//for (int time = 0; h*endTime; time++)
-	//{
+	int staticPoint1 = nrOfParticlesHorizontally*nrOfParticlesVertically - 1;
+	int staticPoint2 = nrOfParticlesHorizontally*(nrOfParticlesVertically - 1);
+	//int staticPoint1 = 0;
+	//int staticPoint2 = nrOfParticlesHorizontally - 1;
+
 	for (int j = 0; j < nrOfParticlesHorizontally*nrOfParticlesVertically; j++){
 		// if we are on the top row of the fabric
-		if (j <= nrOfParticlesHorizontally){
-			kUpp = glm::vec3(0.f, 0.f, 0.0f);
-			cUpp = glm::vec3(0.f, 0.f, 0.0f);
+		if (j <= nrOfParticlesHorizontally-1){
+			kUpp = glm::vec3(0.f, 0.f, 0.f);
+			cUpp = glm::vec3(0.f, 0.f, 0.f);
 		} else{ // else add force from the spring and damper attatch to the paricle above
 			kUpp = (particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - springRestLenght) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]));
 			cUpp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
@@ -33,8 +34,8 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 		
 		// if we are on the far left column of the fabric
 		if (j % nrOfParticlesHorizontally == 0){
-			kVanster = glm::vec3(0.f, 0.f, 0.0f);
-			cVanster = glm::vec3(0.f, 0.f, 0.0f);
+			kVanster = glm::vec3(0.f, 0.f, 0.f);
+			cVanster = glm::vec3(0.f, 0.f, 0.f);
 		} else{
 			kVanster = (particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - springRestLenght) / norm(particle_old[j - 1] - particle_old[j]));
 			cVanster = velocity_old[j - 1] - velocity_old[j];
@@ -67,10 +68,16 @@ vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_o
 
 			//calculate the new possition
 			particlesNextPos[j] = particle[j] + timestep*velocity[j];
-
 		}
+		//cout << "particel " << j << ".x = " << particlesNextPos[j].x << " .y = " << particlesNextPos[j].y << " .z = " << particlesNextPos[j].z << endl;
+		//cout << "velocity " << j << ".x = " << velocity[j].x << " .y = " << velocity[j].y << " .z = " << velocity[j].z << endl;
 	}
-	return particlesNextPos;
+	//cout << endl;
+	
+	//update to new values
+	velocity_old = velocity;
+	particle_old = particle;
+	particle = particlesNextPos;
 }
 
 
@@ -96,9 +103,11 @@ void placeParticles(vector<glm::vec3> &particles) {
 			row += 1;
 		} 
 
-		tempVec.x = springRestLenght * (i - nrOfParticlesHorizontally*row); // X-coordinate
-		tempVec.y = springRestLenght * row; // Y-coordinate
-		tempVec.z = 0; // z-coordinate
+		tempVec.x =  springRestLenght * (i - nrOfParticlesHorizontally*row); // X-coordinate
+		tempVec.y= 0; // y-coordinate
+		tempVec.z =  springRestLenght * row; // z-coordinate
+
+		cout << "particel " << ".x = " << tempVec.x << " .y = " << tempVec.y << " .z = " << tempVec.z << endl;
 
 		particles.push_back(tempVec);
 	}
@@ -134,5 +143,5 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> Coord)
 
 // norm = sqrt(x^2+y^2+x^2) 
 float norm(glm::vec3 vec){
-	return  sqrt(pow(vec.x, 2.0) + pow(vec.y, 2.0) + pow(vec.x, 2.0));
+	return  sqrt(pow(vec.x, 2.0) + pow(vec.y, 2.0) + pow(vec.z, 2.0));
 }

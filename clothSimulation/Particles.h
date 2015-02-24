@@ -11,14 +11,14 @@ using namespace std;
 // global constants 
 //-----------------------
 
-const int nrOfParticlesHorizontally = 6;
+const int nrOfParticlesHorizontally = 8;
 const int nrOfParticlesVertically = 6;
-const float springRestLenght = 0.2f;
+const float springRestLenght = 0.1f;
 const float timestep = 0.001f;
-const float particleMass = 0.0004f;
-const float k = 5.0f;				// spring konstant
-const float c = 0.03f;					// damper constant
-const glm::vec3 g = glm::vec3(0.f, 0.f, 9.82f); // gravity
+const float particleMass = 0.1f;
+const float k = 600.0f;							// spring konstant
+const float c =2.0f;							// damper constant
+const glm::vec3 g = glm::vec3(0.f, 9.82f, 0.f); // gravity
 
 
 //-----------------------
@@ -26,7 +26,7 @@ const glm::vec3 g = glm::vec3(0.f, 0.f, 9.82f); // gravity
 //-----------------------
 
 //Calculate the cloths position in the next frame using Eulermethod. Input is the cloths position in the current frame
-vector<glm::vec3> Euler(vector<glm::vec3> particle, vector<glm::vec3> particle_old, vector<glm::vec3> velocity, vector<glm::vec3> velocity_old);
+void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<glm::vec3> &velocity, vector<glm::vec3> &velocity_old);
 
 //Place a vector whith zeros, cloth velosity in its initial state.
 vector<glm::vec3> placeZeros();
