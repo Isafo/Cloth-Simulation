@@ -5,9 +5,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // incude frustum
 #include <glm/gtc/type_ptr.hpp> 
+#include <SOIL/SOIL.h>
 
 #include "Particles.h"
 #include "Shader.h"
+
 
 using namespace glm;
 
@@ -62,7 +64,7 @@ int main(void) {
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // window not resizable
 
-	// Open a window and create its OpenGL context 
+	// Open a window and create its OpenGL context
 	GLFWwindow* window = glfwCreateWindow(1024, 768, "Cloth simulation", NULL, NULL);
 
 
@@ -87,7 +89,6 @@ int main(void) {
 	particle_old = particles;
 	velocity = placeZeros();
 	velocity_old = velocity;
-	cout << particles[1].x;
 
 
 	//create shader
@@ -151,14 +152,14 @@ static void error_callback (int error, const char* description) {
 	fputs(description, stderr);
 }
 
-// Function for drawing a triangle between the neighbouring particles
+// Function for drawing the cloth
 void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	
 	GLuint ibo_cloth_elements;
 	GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
-	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, -1 , 1); // left, right, bottom, top, near, far
-	mat4 view = glm::lookAt(vec3(0.0f, 0.0f, -2.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
+	glm::mat4 frustum = glm::frustum(0, 1, -1, 0, -1 , 1); // left, right, bottom, top, near, far
+	mat4 view = glm::lookAt(vec3(1.0f, 0.0f, -1.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
 
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
 	GLfloat clothVertices[1000]; // contains the cloth vertices coordiates
@@ -169,7 +170,13 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	// i is used for taking 3 particles each loop, 3 particles -> i = i + 3
 	// while j is used to save the 3 particles x, y and z coordinates and color in the arrays, 9 coordinates -> j = j + 9
 	// loop continues untill there is less than 3 particles left in drawOrder
+	int row = 0;
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
+
+		if (i % 2 == 0){
+			row++;
+		}
+
 		// insert the first particles coordinates
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
@@ -189,21 +196,39 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothElements[i] = i;
 		clothElements[i + 1] = (i + 1);
 		clothElements[i + 2] = (i + 2);
-
-		// the first triangles colors
-		clothColors[j] = 0.5f;
-		clothColors[j + 1] = 0.0f;
-		clothColors[j + 2] = 1.0f;
 		
-		// the second triangles colors
-		clothColors[j + 3] = 1.0f;
-		clothColors[j + 4] = 0.0f;
-		clothColors[j + 5] = 0.0f;
+		if (row % 2 == 0){
+			// the first triangles colors
+			clothColors[j] = 0.5f;
+			clothColors[j + 1] = 0.0f;
+			clothColors[j + 2] = 1.0f;
 
-		// the third triangles colors
-		clothColors[j + 6] = 0.5f;
-		clothColors[j + 7] = 1.0f;
-		clothColors[j + 8] = 1.0f;
+			// the second triangles colors
+			clothColors[j + 3] = 0.5f;
+			clothColors[j + 4] = 0.0f;
+			clothColors[j + 5] = 1.0f;
+
+			// the third triangles colors
+			clothColors[j + 6] = 0.5f;
+			clothColors[j + 7] = 0.0f;
+			clothColors[j + 8] = 1.0f;
+		} else {
+			// the first triangles colors
+			clothColors[j] = 1.0f;
+			clothColors[j + 1] = 0.0f;
+			clothColors[j + 2] = 1.0f;
+
+			// the second triangles colors
+			clothColors[j + 3] = 1.0f;
+			clothColors[j + 4] = 1.0f;
+			clothColors[j + 5] = 1.0f;
+
+			// the third triangles colors
+			clothColors[j + 6] = 1.0f;
+			clothColors[j + 7] = 1.0f;
+			clothColors[j + 8] = 1.0f;
+
+		}
 	}
 
 
@@ -221,6 +246,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glGenBuffers(1, &vbo_cloth_colors);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_cloth_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(clothColors), clothColors, GL_STATIC_DRAW);
+
 
 	glUseProgram(phongShader.programID);
 
