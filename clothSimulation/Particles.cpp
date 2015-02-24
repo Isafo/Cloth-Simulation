@@ -120,12 +120,12 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> Coord)
 {
 	vector<glm::vec3> order;
 
-	//width-1 because we dont need to look at the 
+	//heigth-1 because we dont need to look at the 
 	//last row of masses of the cloth
 	//and not the last mass of the second last row either
-	for (int j = 0; j < (nrOfParticlesHorizontally - 1)*nrOfParticlesVertically - 1; j++)
+	for (int j = 0; j < (nrOfParticlesHorizontally)*(nrOfParticlesVertically-1)-1; j++)
 	{
-		//if we have reached the rigth side of the cloth 
+		//if we have reached the right side of the cloth 
 		//we skip to the next mass
 		if ((j+1)%nrOfParticlesHorizontally != 0)
 		{
