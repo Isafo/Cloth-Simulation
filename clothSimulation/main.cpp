@@ -129,13 +129,9 @@ int main(void) {
 
 		//draw here
 		drawTriangles(particles, phongShader);
-<<<<<<< HEAD
-		particles = Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
-=======
 		for (int skipp = 0; skipp < 7; skipp++){
 			Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
 		}
->>>>>>> 88ed9bf... fixed bugg with array size and lost triangles for some sizese on the cloth
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -184,7 +180,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	int row = 0;
 	for (int i = 0, j = 0; i < drawOrder.size(); i = i + 3, j = j + 9) {
 
-		if (i % 2 == 0){
+		if (i % 2 == 0) {
 			row++;
 		}
 
@@ -192,17 +188,25 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothVertices[j] = (drawOrder[i].x);
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
-		
+
 		// set draw order, the input is orderd
 		clothElements[i] = i;
 
-		// the first triangles colors
-		clothColors[j] = 0.5f;
-		clothColors[j + 1] = 0.0f;
-		clothColors[j + 2] = 1.0f;
+		if (row % 2 == 0) {
+			// the first triangles colors
+			clothColors[j] = 0.5f;
+			clothColors[j + 1] = 0.0f;
+			clothColors[j + 2] = 1.0f;
+		}
+		else {
+			// the first triangles colors
+			clothColors[j] = 1.0f;
+			clothColors[j + 1] = 0.0f;
+			clothColors[j + 2] = 1.0f;
+		}
 
-		if (i + 1 < drawOrder.size())
-		{
+		if (i + 1 < drawOrder.size()) {
+
 			// insert the second particles coordinates
 			clothVertices[j + 3] = (drawOrder[i + 1].x);
 			clothVertices[j + 4] = (drawOrder[i + 1].y);
@@ -210,26 +214,43 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 
 			clothElements[i + 1] = (i + 1);
 
-			// the second triangles colors
-			clothColors[j + 3] = 1.0f;
-			clothColors[j + 4] = 0.0f;
-			clothColors[j + 5] = 0.0f;
+
+			if (row % 2 == 0) {
+				// the second triangles colors
+				clothColors[j + 3] = 0.5f;
+				clothColors[j + 4] = 0.0f;
+				clothColors[j + 5] = 1.0f;
+			}
+			else {
+				// the second triangles colors
+				clothColors[j + 3] = 1.0f;
+				clothColors[j + 4] = 1.0f;
+				clothColors[j + 5] = 1.0f;
+			}
 		}
 
-		if (i + 2 < drawOrder.size())
-		{
+		if (i + 2 < drawOrder.size()) {
 			// insert the third particles coordinates
 			clothVertices[j + 6] = (drawOrder[i + 2].x);
 			clothVertices[j + 7] = (drawOrder[i + 2].y);
 			clothVertices[j + 8] = (drawOrder[i + 2].z);
-		
+
 			clothElements[i + 2] = (i + 2);
 
-			// the third triangles colors
-			clothColors[j + 6] = 0.5f;
-			clothColors[j + 7] = 1.0f;
-			clothColors[j + 8] = 1.0f;
-		}		
+			if (row % 2 == 0) {
+				// the third triangles colors
+				clothColors[j + 6] = 0.5f;
+				clothColors[j + 7] = 0.0f;
+				clothColors[j + 8] = 1.0f;
+			}
+			else {
+				// the third triangles colors
+				clothColors[j + 6] = 0.5f;
+				clothColors[j + 7] = 1.0f;
+				clothColors[j + 8] = 1.0f;
+
+			}
+		}
 	}
 
 
