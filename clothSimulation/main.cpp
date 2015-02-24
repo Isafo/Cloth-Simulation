@@ -128,8 +128,10 @@ int main(void) {
 
 		//draw here
 		drawTriangles(particles, phongShader);
-		Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
-		
+		for (int skipp = 0; skipp < 7; skipp++){
+			Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
+		}
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -161,18 +163,21 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	mat4 view = glm::lookAt(vec3(1.0f, 0.0f, -1.00001f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
 
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
-	GLfloat clothVertices[1000]; // contains the cloth vertices coordiates
-    GLushort clothElements[1000]; // contains the order the particles should be drawn in
-	GLfloat clothColors[1000]; // contains the vertices colors
+	//const int vectorSize = drawOrder.size() * 3;
+	const int vectorSize = ((nrOfParticlesHorizontally -1 )*(nrOfParticlesVertically - 1) )*6*3;
+	//cout << drawOrder.size() * 3 << endl;
+	//cout << vectorSize << endl;
+	GLfloat clothVertices[vectorSize]; // contains the cloth vertices coordiates
+	GLushort clothElements[vectorSize]; // contains the order the particles should be drawn in
+	GLfloat clothColors[vectorSize]; // contains the vertices colors
 
 	// insert the coordinates, elements and colors in arrays.
 	// i is used for taking 3 particles each loop, 3 particles -> i = i + 3
 	// while j is used to save the 3 particles x, y and z coordinates and color in the arrays, 9 coordinates -> j = j + 9
 	// loop continues untill there is less than 3 particles left in drawOrder
+
 	int row = 0;
 	for (int i = 0, j = 0; i + 2 < drawOrder.size(); i = i + 3, j = j + 9) {
-
-		//assert(clothVertices[j + 5] != '-1.#IND');
 
 		if (i % 2 == 0){
 			row++;
@@ -183,24 +188,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 		clothVertices[j + 1] = (drawOrder[i].y);
 		clothVertices[j + 2] = (drawOrder[i].z);
 		
-		// insert the second particles coordinates
-		clothVertices[j + 3] = (drawOrder[i + 1].x);
-		clothVertices[j + 4] = (drawOrder[i + 1].y);
-		clothVertices[j + 5] = (drawOrder[i + 1].z);
-
-		// insert the third particles coordinates
-		clothVertices[j + 6] = (drawOrder[i + 2].x);
-		clothVertices[j + 7] = (drawOrder[i + 2].y);
-		clothVertices[j + 8] = (drawOrder[i + 2].z);
-
 		// set draw order, the input is orderd
 		clothElements[i] = i;
-		clothElements[i + 1] = (i + 1);
-		clothElements[i + 2] = (i + 2);
-
-		//if (i != 0 && (i % 3) % nrOfParticlesHorizontally == 0) {
-		//	row++;
-		//}
 		
 		if (row % 2 == 0){
 			// the first triangles colors
