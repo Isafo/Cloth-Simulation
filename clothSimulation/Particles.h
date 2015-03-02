@@ -39,3 +39,6 @@ vector<glm::vec3> MakeTriangles(vector<glm::vec3> C);
 
 //norm = sqrt(x^2+y^2+x^2) 
 float norm(glm::vec3 vec);
+
+// add two coners to static points
+void initializeStaticParticles(vector<int> &staticParticles);

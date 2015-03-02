@@ -80,6 +80,12 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 	particle = particlesNextPos;
 }
 
+void initializeStaticParticles(vector<int> &staticParticles){
+	int staticPoint1 = nrOfParticlesHorizontally*nrOfParticlesVertically - 1;
+	int staticPoint2 = nrOfParticlesHorizontally*(nrOfParticlesVertically - 1);
+	staticParticles.push_back(staticPoint1);
+	staticParticles.push_back(staticPoint2);
+}
 
 // Place a vector whith zeros, cloth velosity in its initial state.
 vector<glm::vec3> placeZeros(){
