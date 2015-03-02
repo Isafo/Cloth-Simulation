@@ -99,7 +99,7 @@ int FindClosestNeighbor(vector<glm::vec3> massPositions, double mousePosX, doubl
 
 		//find the mass closest to the ray (smallest orthogonalDistW)
 		//by sorting
-		sort(possibleTargets.begin(), possibleTargets.end(), [](CloseMasses a, CloseMasses b){return(a.orthogonalDistW < b.orthogonalDistW); });
+		sort(possibleTargets.begin(), possibleTargets.begin() + groupEnd, [](CloseMasses a, CloseMasses b){return(a.orthogonalDistW < b.orthogonalDistW); });
 
 		//Return the number of the first closeMesses in the sorted vector, since it will be the closest to the ray
 		return possibleTargets[0].number;
