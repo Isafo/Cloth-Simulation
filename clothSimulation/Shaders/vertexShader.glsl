@@ -1,4 +1,4 @@
-# version 450
+# version 430
 
 
 attribute vec3 coord3d;

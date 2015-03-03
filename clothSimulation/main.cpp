@@ -18,9 +18,9 @@ using namespace glm;
 static void key_callback (GLFWwindow* window, int key, int scancode, int action, int mods);
 static void error_callback (int error, const char* description);
 void drawTriangles(vector<glm::vec3> particles, Shader phongShader);
-void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::vec3> &particles, bool &particleInStatic, vector<int> &staticParticles);
+void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::vec3> &particles, bool &particleInStatic, vector<int> &staticParticles, bool &pressed, int &selectedParticlePos);
 void convertMouseCordToOpenGLCord(double &mousePosX, double &mousePosY, int width, int height);
-
+vec3 newPos(float oldZ, float mousePosX, float mousePosY, vec3 cameraPos, int clipingPlaneNear);
 
 //-----------------------
 // variable declarations 
@@ -29,10 +29,11 @@ void convertMouseCordToOpenGLCord(double &mousePosX, double &mousePosY, int widt
 GLuint vbo_triangle, vbo_triangle_colors; // Vertex Buffer Objects, for storing vertices directly in the graphics card
 GLint attribute_coord3d, attribute_v_color;
 GLint uniform_mvp;
-const vec3 cameraPosition = vec3(0.3f, 0.0f, -2.0f);
+const vec3 cameraPosition = vec3(0.0f, 0.0f, -3.0f);
 const vec3 viewDirection = vec3(0.0f, 0.0f, 0.0f);
+const vec3 up = vec3(0.0f, -1.0f, 0.0f);
 const int clipingPlaneNear = -2;
-const float maxSpringLenght = 0.2 * 5;
+const float maxSpringLenght = springRestLenght * 25;
 
 
 struct attributes {
@@ -49,8 +50,9 @@ int main(void) {
 
 	// bools for checking what simulation to run
 	bool clothHanging = true;
-
+	bool pressed = false; //checks for the first call of mouse being pressed down
 	bool particleInStatic = false; // bool for checking if particle has been pushed back in vector
+	int selectedParticlePos = -1;
 
 	vector<glm::vec3> particles;
 	vector<glm::vec3> particle_old;
@@ -62,7 +64,6 @@ int main(void) {
 
 	Shader phongShader;
 
-
 	glfwSetErrorCallback(error_callback);
 
 	// Initialise GLFW
@@ -72,7 +73,7 @@ int main(void) {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // window not resizable
 
 	// Open a window and create its OpenGL context
-	GLFWwindow* window = glfwCreateWindow(1024, 768, "Cloth simulation", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "Cloth simulation", NULL, NULL);
 
 
 	if (!window) {
@@ -138,12 +139,12 @@ int main(void) {
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		checkMouseButtons(window, width, height, particles, particleInStatic, staticParticles); // check if a mouse is pressed
+		checkMouseButtons(window, width, height, particles, particleInStatic, staticParticles, pressed, selectedParticlePos); // check if a mouse is pressed
 
 		//draw here
 		drawTriangles(particles, phongShader);
-		for (int skipp = 0; skipp < 7; skipp++){
-			Euler(particles, particle_old, velocity, velocity_old); // calculate the cloths next position
+		for (int skipp = 0; skipp < 12; skipp++){// to enhance preformanse since movment in one timestep is so smale that we dont need to draw every timestep.
+			Euler(particles, particle_old, velocity, velocity_old, staticParticles); // calculate the cloths next position
 		}
 
 		// Swap buffers
@@ -173,8 +174,8 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	GLuint ibo_cloth_elements;
 	GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
-	glm::mat4 frustum = glm::frustum(0, 2, -2, 0, -2 , 1); // left, right, bottom, top, near, far
-	mat4 view = glm::lookAt(vec3(0.3f, 0.0f, -2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)); // get the view matrix
+	glm::mat4 frustum = glm::frustum(-2, 2, -2, 2, clipingPlaneNear, 1); // left, right, bottom, top, near, far
+	mat4 view = glm::lookAt(cameraPosition, viewDirection, up); // get the view matrix
 
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
 
@@ -304,13 +305,12 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	glDisableVertexAttribArray(attribute_coord3d);
 	glDisableVertexAttribArray(attribute_v_color);
 	glDeleteBuffers(1, &ibo_cloth_elements);
-
 }
 
 //	Check if either left or right mousebuttons are pressed down
 //	If left mouse button is pressed down set the closest particle to follow the mouse, make it static for euler.
 //	If right mouse button is pressed down destroy the springs at the cursor location.
-void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::vec3> &particles, bool &particleInStatic, vector<int> &staticParticles){
+void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::vec3> &particles, bool &particleInStatic, vector<int> &staticParticles, bool &pressed, int &selectedParticlePos){
 	double cursorPosX, cursorPosY; // position of the cursor
 
 	// Check Mousebutton status
@@ -326,25 +326,28 @@ void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::ve
 
 		// Convert to openGL coordinates
 		convertMouseCordToOpenGLCord(cursorPosX, cursorPosY, width, height);
-
-		// fixa variabler istället för siffror i vec
-		int selectedParticlePos = FindClosestNeighbor(particles, cursorPosX, cursorPosY,
-													  cameraPosition, viewDirection,
-													  clipingPlaneNear, 10);
+		
+		if (!pressed){
+			// fixa variabler istället för siffror i vec
+			selectedParticlePos = FindClosestNeighbor(particles, cursorPosX, cursorPosY,
+														cameraPosition,	clipingPlaneNear, maxSpringLenght);			
+			pressed = true;
+		}
 
 		if (selectedParticlePos != -1){ // was a particle found?
 			// Set the closest particles position to the mousePos and make it static if it isnt allready
-			particles[selectedParticlePos] = vec3(cursorPosX, cursorPosY, particles[selectedParticlePos].z);
-	
+			particles[selectedParticlePos] = newPos(particles[selectedParticlePos].z, -cursorPosX, cursorPosY, cameraPosition, clipingPlaneNear);
+			
 			if (particleInStatic == false) { // the particle is not static
 				staticParticles.push_back(selectedParticlePos);
 				particleInStatic = true;
 			}
 		}
-
 	} else if (stateLeftButton == GLFW_RELEASE && particleInStatic == true){ // Set the particle that was being pulled to non static if there has has been an addition
 		staticParticles.pop_back();
+		selectedParticlePos = -1;
 		particleInStatic = false;
+		pressed = false;
 	} else if (stateRightButton == GLFW_PRESS) { // cut the cloth
 		glfwGetCursorPos(window, &cursorPosX, &cursorPosY);
 		glfwGetCursorPos(window, &cursorPosX, &cursorPosY);
@@ -362,19 +365,37 @@ void convertMouseCordToOpenGLCord(double &mousePosX, double &mousePosY, int widt
 	
 	
 	if (mousePosX < width / 2) {				//check if cursor is in left half plane if so take the negative mousePos add (width / 2) to make origo in center of window, then normalize and make it negative
-		mousePosX = (-1) * (- mousePosX + (width / 2)) / (width / 2);
+		mousePosX = (-2) * (- mousePosX + (width / 2)) / (width / 2);
 	} else if (mousePosX == width / 2) { 		// If mouse position equals width / 2 then it is in the center
 		mousePosX = 0;
 	} else {									// else the cursor is in the right half plane, subtract (width / 2) to make origo in center of window the normalize
-		mousePosX = (mousePosX - (width / 2)) / (width / 2);
+		mousePosX = 2*(mousePosX - (width / 2)) / (width / 2);
 	}
 
 	// Same as for X but add/subtract (height / 2) and make upper half positive and lower negative
 	if (mousePosY < height / 2) {
-		mousePosY = (-mousePosY + (height / 2)) / (height / 2);
+		mousePosY = 2* (-mousePosY + (height / 2)) / (height / 2);
 	} else if (mousePosY == height / 2) {
 		mousePosY = 0;
 	} else {
-		mousePosY = (-1) * (mousePosY - (height / 2)) / (height / 2);
+		mousePosY = (-2) * (mousePosY - (height / 2)) / (height / 2);
 	}
+}
+
+vec3 newPos(float oldZ, float mousePosX, float mousePosY, vec3 cameraPos, int clipingPlaneNear){
+	//create a 3D position for the mouse
+	//The mouse coordinates are already scaled to match openGL
+	glm::vec3 mousePosition = glm::vec3(mousePosX, mousePosY, clipingPlaneNear);
+
+	//create a ray from the camera to the mouse
+	glm::vec3 rayN = mousePosition - cameraPos;
+
+	//calculate new x and y positions for the mass. z is unchanged.
+	//c could help to make the cloth follow the mouse even if the camera is moved, doesn't work rigth now
+	float newX = mousePosX + rayN.x, newY = mousePosY + rayN.y;
+
+	//cout << "c " << c << endl;
+	//cout << "X " << newX << " Y " << newY << " Z " << oldZ << endl;
+	
+	return vec3(newX, newY, oldZ);
 }
