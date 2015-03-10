@@ -15,20 +15,20 @@ const int nrOfParticlesHorizontally = 16;
 const int nrOfParticlesVertically = 16;
 const float springRestLenght = 0.1f;
 const float timestep = 0.0015f;
-const float particleMass = 0.01f;
+const float particleMass = 0.018f;
 const float k = 1000.0f;						 // spring konstant
 const float c =5.0f;							 // damper constant
 const glm::vec3 g = glm::vec3(0.f, -9.82f, 0.f); // gravity
 
-const float kSt = 60;
-const float kSh = 50;
+const float kSt = 80;
+const float kSh = 60;
 const float kB = 20;
 const float oaSt = springRestLenght;
 const float oaSh = sqrt(2 * pow(oaSt, 2.0));
 const float oaB = 2 * oaSt;
-const float cSt = 0.8;
-const float cSh = 0.7;
-const float cB = 0.5;
+const float cSt = 1.2;
+const float cSh = 0.9;
+const float cB = 0.6;
 
 //-----------------------
 // function declarations 
