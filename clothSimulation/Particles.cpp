@@ -9,35 +9,30 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 
 	std::vector<int>::iterator it;
 
-	glm::vec3 kUpp;
-	glm::vec3 cUpp;
-	glm::vec3 kVanster;
-	glm::vec3 cVanster;
-	/*glm::vec3 kRigth;
-	glm::vec3 cRigth;
-	glm::vec3 kDown;
-	glm::vec3 cDown;*/
-
+	glm::vec3 kUp;
+	glm::vec3 cUp;
+	glm::vec3 kLeft;
+	glm::vec3 cLeft;
 	glm::vec3 kRight;
 	glm::vec3 cRight;
-	glm::vec3 kNed;
-	glm::vec3 cNed;
-	glm::vec3 k2Ned;
-	glm::vec3 c2Ned;
-	glm::vec3 kUppVanster;
-	glm::vec3 cUppVanster;
-	glm::vec3 kUppHoger;
-	glm::vec3 cUppHoger;
-	glm::vec3 kNedVanster;
-	glm::vec3 cNedVanster;
-	glm::vec3 kNedHoger;
-	glm::vec3 cNedHoger;
-	glm::vec3 k2Upp;
-	glm::vec3 c2Upp;
-	glm::vec3 k2Hoger;
-	glm::vec3 c2Hoger;
-	glm::vec3 k2Vanster;
-	glm::vec3 c2Vanster;
+	glm::vec3 kDown;
+	glm::vec3 cDown;
+	glm::vec3 k2Down;
+	glm::vec3 c2Down;
+	glm::vec3 kUpLeft;
+	glm::vec3 cUpLeft;
+	glm::vec3 kUpRight;
+	glm::vec3 cUpRight;
+	glm::vec3 kDownLeft;
+	glm::vec3 cDownLeft;
+	glm::vec3 kDownRight;
+	glm::vec3 cDownRight;
+	glm::vec3 k2Up;
+	glm::vec3 c2Up;
+	glm::vec3 k2Right;
+	glm::vec3 c2Right;
+	glm::vec3 k2Left;
+	glm::vec3 c2Left;
 
 	int staticPoint1 = nrOfParticlesHorizontally*nrOfParticlesVertically - 1;
 	int staticPoint2 = nrOfParticlesHorizontally*(nrOfParticlesVertically - 1);
@@ -47,33 +42,33 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 		//if we can have a bend spring upwards
 		if (j +1 > 2 * nrOfParticlesHorizontally)
 		{
-			k2Upp = ((particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j]) - oaB) / norm(particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j])));
-			c2Upp = velocity_old[j - 2 * nrOfParticlesHorizontally] - velocity_old[j];
+			k2Up = ((particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j]) - oaB) / norm(particle_old[j - 2 * nrOfParticlesHorizontally] - particle_old[j])));
+			c2Up = velocity_old[j - 2 * nrOfParticlesHorizontally] - velocity_old[j];
 
 			//then we can elso have a streatch spring upwards
-			kUpp = ((particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j])));
-			cUpp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
+			kUp = ((particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j])));
+			cUp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
 		}
 		else{
 			//if we can have a streatch spring upwards
 			if (j+1 > nrOfParticlesHorizontally)
 			{
-				kUpp = ((particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j])));
-				cUpp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
+				kUp = ((particle_old[j - nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j - nrOfParticlesHorizontally] - particle_old[j])));
+				cUp = velocity_old[j - nrOfParticlesHorizontally] - velocity_old[j];
 			}
 			else{
-				kUpp = glm::vec3(0.f, 0.f, 0.f);
-				cUpp = glm::vec3(0.f, 0.f, 0.f);
+				kUp = glm::vec3(0.f, 0.f, 0.f);
+				cUp = glm::vec3(0.f, 0.f, 0.f);
 			}
 
-			k2Upp = glm::vec3(0.f, 0.f, 0.f);
-			c2Upp = glm::vec3(0.f, 0.f, 0.f);
+			k2Up = glm::vec3(0.f, 0.f, 0.f);
+			c2Up = glm::vec3(0.f, 0.f, 0.f);
 		}
 
 		//if we can have a bend spring to the right
 		if ((j+1) % nrOfParticlesHorizontally > 0 && (j+1)% nrOfParticlesHorizontally < nrOfParticlesHorizontally - 1){
-			k2Hoger = ((particle_old[j + 2] - particle_old[j])*((norm(particle_old[j + 2] - particle_old[j]) - oaB) / norm(particle_old[j + 2] - particle_old[j])));
-			c2Hoger = velocity_old[j + 2] - velocity_old[j];
+			k2Right = ((particle_old[j + 2] - particle_old[j])*((norm(particle_old[j + 2] - particle_old[j]) - oaB) / norm(particle_old[j + 2] - particle_old[j])));
+			c2Right = velocity_old[j + 2] - velocity_old[j];
 
 			//then we can elso have a streatch spring to the right
 			kRight = ((particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - oaSt) / norm(particle_old[j + 1] - particle_old[j])));
@@ -89,94 +84,94 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 				kRight = glm::vec3(0.f, 0.f, 0.f);
 				cRight = glm::vec3(0.f, 0.f, 0.f);
 			}
-			k2Hoger = glm::vec3(0.f, 0.f, 0.f);
-			c2Hoger = glm::vec3(0.f, 0.f, 0.f);
+			k2Right = glm::vec3(0.f, 0.f, 0.f);
+			c2Right = glm::vec3(0.f, 0.f, 0.f);
 		}
 
 		//if we can have a bend spring downwards
 		if (j+1 <= nrOfParticlesHorizontally*(nrOfParticlesVertically - 2)){
-			k2Ned = ((particle_old[j + 2 * nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + 2 * nrOfParticlesHorizontally] - particle_old[j]) - oaB) / norm(particle_old[ j + 2 * nrOfParticlesHorizontally] - particle_old[j])));
-			c2Ned = velocity_old[j + 2 * nrOfParticlesHorizontally] - velocity_old[j];
+			k2Down = ((particle_old[j + 2 * nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + 2 * nrOfParticlesHorizontally] - particle_old[j]) - oaB) / norm(particle_old[ j + 2 * nrOfParticlesHorizontally] - particle_old[j])));
+			c2Down = velocity_old[j + 2 * nrOfParticlesHorizontally] - velocity_old[j];
 
 			//then we can elso have a streatch spring downwards
-			kNed = ((particle_old[ j + nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j])));
-			cNed = velocity_old[j + nrOfParticlesHorizontally] - velocity_old[j];
+			kDown = ((particle_old[ j + nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j])));
+			cDown = velocity_old[j + nrOfParticlesHorizontally] - velocity_old[j];
 		}
 		else{
 			//if we can have a streatch spring downwards
 			if (j+1 <= nrOfParticlesHorizontally*(nrOfParticlesVertically - 1)){
-				kNed = ((particle_old[j + nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j])));
-				cNed = velocity_old[j + nrOfParticlesHorizontally] - velocity_old[j];
+				kDown = ((particle_old[j + nrOfParticlesHorizontally] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j]) - oaSt) / norm(particle_old[j + nrOfParticlesHorizontally] - particle_old[j])));
+				cDown = velocity_old[j + nrOfParticlesHorizontally] - velocity_old[j];
 			}
 			else{
-				kNed = glm::vec3(0.f, 0.f, 0.f);
-				cNed = glm::vec3(0.f, 0.f, 0.f);
+				kDown = glm::vec3(0.f, 0.f, 0.f);
+				cDown = glm::vec3(0.f, 0.f, 0.f);
 			}
-			k2Ned = glm::vec3(0.f, 0.f, 0.f);
-			c2Ned = glm::vec3(0.f, 0.f, 0.f);
+			k2Down = glm::vec3(0.f, 0.f, 0.f);
+			c2Down = glm::vec3(0.f, 0.f, 0.f);
 		}
 
 		//if we can have a bend spring to the left
 		if ((j+1) % nrOfParticlesHorizontally > 2){
-			k2Vanster = ((particle_old[j - 2] - particle_old[j])*((norm(particle_old[j - 2] - particle_old[j]) - oaB) / norm(particle_old[j - 2] - particle_old[j])));
-			c2Vanster = velocity_old[j - 2] - velocity_old[j];
+			k2Left = ((particle_old[j - 2] - particle_old[j])*((norm(particle_old[j - 2] - particle_old[j]) - oaB) / norm(particle_old[j - 2] - particle_old[j])));
+			c2Left = velocity_old[j - 2] - velocity_old[j];
 
 			//then we can elso have a streatch spring to the left
-			kVanster = ((particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - oaSt) / norm(particle_old[j - 1] - particle_old[j])));
-			cVanster = velocity_old[j - 1] - velocity_old[j];
+			kLeft = ((particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - oaSt) / norm(particle_old[j - 1] - particle_old[j])));
+			cLeft = velocity_old[j - 1] - velocity_old[j];
 		}
 		else{
 			//if we can have a streatch spring to the left
 			if ((j+1) % nrOfParticlesHorizontally != 1){
-				kVanster = ((particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - oaSt) / norm(particle_old[j - 1] - particle_old[j])));
-				cVanster = velocity_old[j - 1] - velocity_old[j];
+				kLeft = ((particle_old[j - 1] - particle_old[j])*((norm(particle_old[j - 1] - particle_old[j]) - oaSt) / norm(particle_old[j - 1] - particle_old[j])));
+				cLeft = velocity_old[j - 1] - velocity_old[j];
 			}
 			else{
-				kVanster = glm::vec3(0.f, 0.f, 0.f);
-				cVanster = glm::vec3(0.f, 0.f, 0.f);
+				kLeft = glm::vec3(0.f, 0.f, 0.f);
+				cLeft = glm::vec3(0.f, 0.f, 0.f);
 			}
-			k2Vanster = glm::vec3(0.f, 0.f, 0.f);
-			c2Vanster = glm::vec3(0.f, 0.f, 0.f);
+			k2Left = glm::vec3(0.f, 0.f, 0.f);
+			c2Left = glm::vec3(0.f, 0.f, 0.f);
 		}
 		
-		//if we can have shear spring to the right and uppwards
+		//if we can have shear spring to the right and Upwards
 		if ((j+1) % nrOfParticlesHorizontally > 0 && j+1 > nrOfParticlesHorizontally){
-			kUppHoger = ((particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j]) - oaSh) / norm(particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j])));
-			cUppHoger = velocity_old[ j - nrOfParticlesHorizontally + 1] - velocity_old[j];
+			kUpRight = ((particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j]) - oaSh) / norm(particle_old[j - nrOfParticlesHorizontally + 1] - particle_old[j])));
+			cUpRight = velocity_old[ j - nrOfParticlesHorizontally + 1] - velocity_old[j];
 		}
 		else{
-			kUppHoger = glm::vec3(0.f, 0.f, 0.f);
-			cUppHoger = glm::vec3(0.f, 0.f, 0.f);
+			kUpRight = glm::vec3(0.f, 0.f, 0.f);
+			cUpRight = glm::vec3(0.f, 0.f, 0.f);
 		}
 
 		//if we can have shear spring to the right and downwards
 		if ((j+1) % nrOfParticlesHorizontally > 0 && j+1 < nrOfParticlesHorizontally*(nrOfParticlesVertically - 1)){
-			kNedHoger = ((particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j]) - oaSh) / norm(particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j])));
-			cNedHoger = velocity_old[j + nrOfParticlesHorizontally + 1] - velocity_old[j];
+			kDownRight = ((particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j]) - oaSh) / norm(particle_old[j + nrOfParticlesHorizontally + 1] - particle_old[j])));
+			cDownRight = velocity_old[j + nrOfParticlesHorizontally + 1] - velocity_old[j];
 		}
 		else{
-			kNedHoger = glm::vec3(0.f, 0.f, 0.f);
-			cNedHoger = glm::vec3(0.f, 0.f, 0.f);
+			kDownRight = glm::vec3(0.f, 0.f, 0.f);
+			cDownRight = glm::vec3(0.f, 0.f, 0.f);
 		}
 
 		//if we can have shear spring to the left and downwards
 		if ((j+1) % nrOfParticlesHorizontally != 1 && j+1 < nrOfParticlesHorizontally*(nrOfParticlesVertically - 1)){
-			kNedVanster = ((particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j]) - oaSh) / norm(particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j])));
-			cNedVanster = velocity_old[j + nrOfParticlesHorizontally - 1] - velocity_old[j];
+			kDownLeft = ((particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j])*((norm(particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j]) - oaSh) / norm(particle_old[j + nrOfParticlesHorizontally - 1] - particle_old[j])));
+			cDownLeft = velocity_old[j + nrOfParticlesHorizontally - 1] - velocity_old[j];
 		}
 		else{
-			kNedVanster = glm::vec3(0.f, 0.f, 0.f);
-			cNedVanster = glm::vec3(0.f, 0.f, 0.f);
+			kDownLeft = glm::vec3(0.f, 0.f, 0.f);
+			cDownLeft = glm::vec3(0.f, 0.f, 0.f);
 		}
 
-		//if we can have shear spring to the left and uppwards
+		//if we can have shear spring to the left and Upwards
 		if ((j+1) % nrOfParticlesHorizontally != 1 && j+1 > nrOfParticlesHorizontally){
-			kUppVanster = ((particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j]) - oaSh) / norm(particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j])));
-			cUppVanster = velocity_old[j - nrOfParticlesHorizontally - 1] - velocity_old[j];
+			kUpLeft = ((particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j])*((norm(particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j]) - oaSh) / norm(particle_old[j - nrOfParticlesHorizontally - 1] - particle_old[j])));
+			cUpLeft = velocity_old[j - nrOfParticlesHorizontally - 1] - velocity_old[j];
 		}
 		else{
-			kUppVanster = glm::vec3(0.f, 0.f, 0.f);
-			cUppVanster = glm::vec3(0.f, 0.f, 0.f);
+			kUpLeft = glm::vec3(0.f, 0.f, 0.f);
+			cUpLeft = glm::vec3(0.f, 0.f, 0.f);
 		}
 		
 
@@ -187,7 +182,7 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 		} else{
 			
 			//calculate the new velosity
-			velocity[j] = velocity_old[j] + (timestep / particleMass)*(particleMass*g + kSt*(kUpp + kVanster + kRight + kNed) + kSh*(kUppVanster + kUppHoger + kNedVanster + kNedHoger) + kB*(k2Upp + k2Hoger + k2Ned + k2Vanster) + cSt*(cUpp + cVanster + cRight + cNed) + cSh*(cUppVanster + cUppHoger + cNedVanster + cNedHoger) + cB*(c2Upp + c2Hoger + c2Ned + c2Vanster));
+			velocity[j] = velocity_old[j] + (timestep / particleMass)*(particleMass*g + kSt*(kUp +kLeft + kRight + kDown) + kSh*(kUpLeft + kUpRight + kDownLeft + kDownRight) + kB*(k2Up + k2Right + k2Down + k2Left) + cSt*(cUp + cLeft + cRight + cDown) + cSh*(cUpLeft + cUpRight + cDownLeft + cDownRight) + cB*(c2Up + c2Right + c2Down + c2Left));
 
 			//calculate the new possition
 			particlesNextPos[j] = particle[j] + timestep*velocity[j];

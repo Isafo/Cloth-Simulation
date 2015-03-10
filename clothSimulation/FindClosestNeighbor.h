@@ -7,7 +7,7 @@
 using namespace std;
 
 int FindClosestNeighbor(vector<glm::vec3> massPositions, double mousePosX, double mousePosY,
-	const glm::vec3 cameraPos, const int clippingPlaneNear, const float maxSpringLength);
+				const int clippingPlaneNear, const float maxSpringLength);
 
 struct CloseMasses{
 	float orthogonalDistW;

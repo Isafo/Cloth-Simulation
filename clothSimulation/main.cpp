@@ -330,7 +330,7 @@ void checkMouseButtons(GLFWwindow* window, int height, int width, vector<glm::ve
 		if (!pressed){
 			// fixa variabler istället för siffror i vec
 			selectedParticlePos = FindClosestNeighbor(particles, cursorPosX, cursorPosY,
-														cameraPosition,	clipingPlaneNear, maxSpringLenght);			
+														clipingPlaneNear, maxSpringLenght);			
 			pressed = true;
 		}
 
@@ -387,8 +387,8 @@ vec3 newPos(float oldZ, float mousePosX, float mousePosY, vec3 cameraPos, int cl
 	//The mouse coordinates are already scaled to match openGL
 	glm::vec3 mousePosition = glm::vec3(mousePosX, mousePosY, clipingPlaneNear);
 
-	//create a ray from the camera to the mouse
-	glm::vec3 rayN = glm::vec3(0, 0, 1);//mousePosition - cameraPos;
+	//create a ray from the mouse out into the 3D space
+	glm::vec3 rayN = glm::vec3(0, 0, 1);
 
 	//calculate new x and y positions for the mass. z is unchanged.
 	//c could help to make the cloth follow the mouse even if the camera is moved, doesn't work rigth now
