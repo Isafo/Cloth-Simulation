@@ -22,9 +22,9 @@ bredd = 10;
 hojd = 10;
 
 b = bredd;
-h = 0.02;
+h = 0.008;
 m = 0.001;
-kSt = 0.7;
+kSt = 1.5;
 kSh = 0.2;
 oaSt = 1;
 oaSh = sqrt(2*oaSt^2)
@@ -60,7 +60,6 @@ color = reshape([1,0,0,
 
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
-    velocity_new = zeros(size(particle));
 
     for j = 1:bredd*hojd  
         
@@ -152,9 +151,8 @@ for tid = 0:h:slutTid
     particle = particle_new;
     
     velocity_old = velocity;
-    velocity = velocity_new;
     
-    if mod(tid/h,5) == 0
+    if mod(tid/h,20) == 0
         %uppdat draw funktion
         x = particle(1,:);
         y = particle(2,:);

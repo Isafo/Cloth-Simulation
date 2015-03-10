@@ -22,17 +22,17 @@ close all
 bredd = 10;
 hojd = 10;
 b = bredd;
-h = 0.02;
+h = 0.004;
 m = 0.001;
-kSt = 0.7;
-kSh = 0.2;
-kB = 0.1;
-oaSt = 1;
+kSt = 4;
+kSh = 1;
+kB = 0.5;
+oaSt = 0.2;
 oaSh = sqrt(2*oaSt^2);
 oaB = 2*oaSt;
-cSt = 0.011;
-cSh = 0.004;
-cB = 0.002;
+cSt = 0.025;
+cSh = 0.02;
+cB = 0.004;
 g = [0;0;9.82];
 slutTid = 10;
 
@@ -54,7 +54,6 @@ graf = scatter3(x,y,z,36);
     
 for tid = 0:h:slutTid
     particle_new = zeros(size(particle));
-    velocity_new = zeros(size(particle));
 
     for j = 1:bredd*hojd  
         
@@ -195,10 +194,9 @@ for tid = 0:h:slutTid
     particle = particle_new;
     
     velocity_old = velocity;
-    velocity = velocity_new;
     
   
-    if mod(tid/h,5) == 0
+    if mod(tid/h,20) == 0
         %uppdat draw funktion
         x = particle(1,:);
         y = particle(2,:);
@@ -208,7 +206,7 @@ for tid = 0:h:slutTid
         xlabel('x') % x-axis label
         ylabel('y') % y-axis label
         zlabel('z') % z-axis label
-        axis([-(bredd*oaSt+1) (bredd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1) -(hojd*oaSt+1) (hojd*oaSt+1)])
+        axis([-((bredd+1)*oaSt) ((bredd+1)*oaSt) -((hojd+1)*oaSt) ((hojd+1)*oaSt) -((hojd+1)*oaSt) ((hojd+1)*oaSt)])
 
         drawnow  %makes the scatterplott visible
     end
