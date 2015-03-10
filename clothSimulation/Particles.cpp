@@ -18,8 +18,8 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 	glm::vec3 kDown;
 	glm::vec3 cDown;*/
 
-	glm::vec3 kHoger;
-	glm::vec3 cHoger;
+	glm::vec3 kRight;
+	glm::vec3 cRight;
 	glm::vec3 kNed;
 	glm::vec3 cNed;
 	glm::vec3 k2Ned;
@@ -76,18 +76,18 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 			c2Hoger = velocity_old[j + 2] - velocity_old[j];
 
 			//then we can elso have a streatch spring to the right
-			kHoger = ((particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - oaSt) / norm(particle_old[j + 1] - particle_old[j])));
-			cHoger = velocity_old[j + 1] - velocity_old[j];
+			kRight = ((particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - oaSt) / norm(particle_old[j + 1] - particle_old[j])));
+			cRight = velocity_old[j + 1] - velocity_old[j];
 		}
 		else{
 			//if we can have a streatch spring to the right
 			if ((j+1) % nrOfParticlesHorizontally != 0){
-				kHoger = ((particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - oaSt) / norm(particle_old[j + 1] - particle_old[j])));
-				cHoger = velocity_old[j + 1] - velocity_old[j];
+				kRight = ((particle_old[j + 1] - particle_old[j])*((norm(particle_old[j + 1] - particle_old[j]) - oaSt) / norm(particle_old[j + 1] - particle_old[j])));
+				cRight = velocity_old[j + 1] - velocity_old[j];
 			}
 			else{
-				kHoger = glm::vec3(0.f, 0.f, 0.f);
-				cHoger = glm::vec3(0.f, 0.f, 0.f);
+				kRight = glm::vec3(0.f, 0.f, 0.f);
+				cRight = glm::vec3(0.f, 0.f, 0.f);
 			}
 			k2Hoger = glm::vec3(0.f, 0.f, 0.f);
 			c2Hoger = glm::vec3(0.f, 0.f, 0.f);
@@ -187,7 +187,7 @@ void Euler(vector<glm::vec3> &particle, vector<glm::vec3> &particle_old, vector<
 		} else{
 			
 			//calculate the new velosity
-			velocity[j] = velocity_old[j] + (timestep / particleMass)*(particleMass*g + kSt*(kUpp + kVanster + kHoger + kNed) + kSh*(kUppVanster + kUppHoger + kNedVanster + kNedHoger) + kB*(k2Upp + k2Hoger + k2Ned + k2Vanster) + cSt*(cUpp + cVanster + cHoger + cNed) + cSh*(cUppVanster + cUppHoger + cNedVanster + cNedHoger) + cB*(c2Upp + c2Hoger + c2Ned + c2Vanster));
+			velocity[j] = velocity_old[j] + (timestep / particleMass)*(particleMass*g + kSt*(kUpp + kVanster + kRight + kNed) + kSh*(kUppVanster + kUppHoger + kNedVanster + kNedHoger) + kB*(k2Upp + k2Hoger + k2Ned + k2Vanster) + cSt*(cUpp + cVanster + cRight + cNed) + cSh*(cUppVanster + cUppHoger + cNedVanster + cNedHoger) + cB*(c2Upp + c2Hoger + c2Ned + c2Vanster));
 
 			//calculate the new possition
 			particlesNextPos[j] = particle[j] + timestep*velocity[j];

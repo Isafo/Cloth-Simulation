@@ -174,7 +174,7 @@ void drawTriangles(vector<glm::vec3> particles, Shader phongShader) {
 	GLuint ibo_cloth_elements;
 	GLuint vbo_cloth_vertices, vbo_cloth_colors;
 
-	glm::mat4 frustum = glm::frustum(-2, 2, -2, 2, clipingPlaneNear, 1); // left, right, bottom, top, near, far
+	glm::mat4 frustum = glm::frustum(-1, 1, -1, 1, clipingPlaneNear, 1); // left, right, bottom, top, near, far
 	mat4 view = glm::lookAt(cameraPosition, viewDirection, up); // get the view matrix
 
 	vector<glm::vec3> drawOrder = MakeTriangles(particles); // orders input so that the normal points in the correct direction
@@ -388,7 +388,7 @@ vec3 newPos(float oldZ, float mousePosX, float mousePosY, vec3 cameraPos, int cl
 	glm::vec3 mousePosition = glm::vec3(mousePosX, mousePosY, clipingPlaneNear);
 
 	//create a ray from the camera to the mouse
-	glm::vec3 rayN = mousePosition - cameraPos;
+	glm::vec3 rayN = glm::vec3(0, 0, 1);//mousePosition - cameraPos;
 
 	//calculate new x and y positions for the mass. z is unchanged.
 	//c could help to make the cloth follow the mouse even if the camera is moved, doesn't work rigth now
